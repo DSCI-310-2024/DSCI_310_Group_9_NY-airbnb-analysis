@@ -1,4 +1,4 @@
-y
+DSCI 310 Group Project
 ==============================
 
 Project for DSCI 310
