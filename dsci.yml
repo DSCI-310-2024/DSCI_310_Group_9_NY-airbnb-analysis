@@ -27,5 +27,8 @@ dependencies:
   - tensorflow
   - uwsgi
   - xgboost
+  - altair
+  - plotly
+  - folium
 
 prefix: /Users/OliverGullery/miniconda3/envs/audio
