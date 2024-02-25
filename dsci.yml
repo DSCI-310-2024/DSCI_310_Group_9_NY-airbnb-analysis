@@ -1,0 +1,31 @@
+name: dsci
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python-graphviz
+  - lifelines
+  - scikit-learn
+  - matplotlib
+  - requests
+  - jinja2
+  - pandas
+  - python==3.10
+  - lightgbm
+  - ipykernel
+  - pip[version='>=23.2.1']
+  - seaborn
+  - librosa
+  - omegaconf
+  - keras
+  - hydra-core
+  - flask
+  - gunicorn
+  - portaudio
+  - scipy
+  - python-sounddevice
+  - tensorflow
+  - uwsgi
+  - xgboost
+
+prefix: /Users/OliverGullery/miniconda3/envs/audio
