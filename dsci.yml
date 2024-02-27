@@ -30,3 +30,5 @@ dependencies:
   - altair
   - plotly
   - folium
+  - statsmodels
+  - numpy
