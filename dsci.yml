@@ -30,5 +30,3 @@ dependencies:
   - altair
   - plotly
   - folium
-
-prefix: /Users/OliverGullery/miniconda3/envs/audio
