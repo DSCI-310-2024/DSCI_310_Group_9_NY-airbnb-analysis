@@ -58,7 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="eda_files/libs/clipboard/clipboard.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="eda_files/libs/clipboard/clipboard.min.js"></script>
 <script src="eda_files/libs/quarto-html/quarto.js"></script>
 <script src="eda_files/libs/quarto-html/popper.min.js"></script>
 <script src="eda_files/libs/quarto-html/tippy.umd.min.js"></script>
@@ -68,6 +68,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="eda_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="eda_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="eda_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -79,8 +82,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
+  <ul>
+  <li><a href="#aim" id="toc-aim" class="nav-link active" data-scroll-target="#aim">Aim</a>
   <ul class="collapse">
-  <li><a href="#aim" id="toc-aim" class="nav-link active" data-scroll-target="#aim">Aim</a></li>
+  <li><a href="#data-shape-datatypes" id="toc-data-shape-datatypes" class="nav-link" data-scroll-target="#data-shape-datatypes">Data Shape &amp; Datatypes</a></li>
+  <li><a href="#summary-statistics" id="toc-summary-statistics" class="nav-link" data-scroll-target="#summary-statistics">Summary Statistics</a></li>
+  <li><a href="#identifying-null-values-duplicates" id="toc-identifying-null-values-duplicates" class="nav-link" data-scroll-target="#identifying-null-values-duplicates">Identifying Null values &amp; Duplicates</a></li>
+  <li><a href="#correlation-matrix-ranked-with-top-ten-correlations" id="toc-correlation-matrix-ranked-with-top-ten-correlations" class="nav-link" data-scroll-target="#correlation-matrix-ranked-with-top-ten-correlations">Correlation Matrix (Ranked with Top Ten Correlations)</a></li>
+  </ul></li>
+  <li><a href="#takwaways-from-preliminary-eda" id="toc-takwaways-from-preliminary-eda" class="nav-link" data-scroll-target="#takwaways-from-preliminary-eda">Takwaways From Preliminary EDA</a>
+  <ul class="collapse">
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul></li>
+  <li><a href="#prelimniary-feature-engineering" id="toc-prelimniary-feature-engineering" class="nav-link" data-scroll-target="#prelimniary-feature-engineering">Prelimniary Feature Engineering</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../eda.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
@@ -111,15 +125,400 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="2ba022dc" class="cell" data-execution_count="1">
+<div id="4a1a9823" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="aim" class="level2">
 <h2 class="anchored" data-anchor-id="aim">Aim</h2>
-<p>Our Exploratory data analysis</p>
+<p>The aim of this data analysis project is to identify which of the factors in the Airbnb Kaggle Dataset are strong predictors of price. Doing so will allow us obtain information which can determine if Airbnbs are accurately priced.</p>
+<div id="c2c52814" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loading the data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">"../data/raw/AB_NYC_2019.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>data.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">host_id</th>
+<th data-quarto-table-cell-role="th">host_name</th>
+<th data-quarto-table-cell-role="th">neighbourhood_group</th>
+<th data-quarto-table-cell-role="th">neighbourhood</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">room_type</th>
+<th data-quarto-table-cell-role="th">price</th>
+<th data-quarto-table-cell-role="th">minimum_nights</th>
+<th data-quarto-table-cell-role="th">number_of_reviews</th>
+<th data-quarto-table-cell-role="th">last_review</th>
+<th data-quarto-table-cell-role="th">reviews_per_month</th>
+<th data-quarto-table-cell-role="th">calculated_host_listings_count</th>
+<th data-quarto-table-cell-role="th">availability_365</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2539</td>
+<td>Clean &amp; quiet apt home by the park</td>
+<td>2787</td>
+<td>John</td>
+<td>Brooklyn</td>
+<td>Kensington</td>
+<td>40.64749</td>
+<td>-73.97237</td>
+<td>Private room</td>
+<td>149</td>
+<td>1</td>
+<td>9</td>
+<td>2018-10-19</td>
+<td>0.21</td>
+<td>6</td>
+<td>365</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2595</td>
+<td>Skylit Midtown Castle</td>
+<td>2845</td>
+<td>Jennifer</td>
+<td>Manhattan</td>
+<td>Midtown</td>
+<td>40.75362</td>
+<td>-73.98377</td>
+<td>Entire home/apt</td>
+<td>225</td>
+<td>1</td>
+<td>45</td>
+<td>2019-05-21</td>
+<td>0.38</td>
+<td>2</td>
+<td>355</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3647</td>
+<td>THE VILLAGE OF HARLEM....NEW YORK !</td>
+<td>4632</td>
+<td>Elisabeth</td>
+<td>Manhattan</td>
+<td>Harlem</td>
+<td>40.80902</td>
+<td>-73.94190</td>
+<td>Private room</td>
+<td>150</td>
+<td>3</td>
+<td>0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>1</td>
+<td>365</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="data-shape-datatypes" class="level3">
+<h3 class="anchored" data-anchor-id="data-shape-datatypes">Data Shape &amp; Datatypes</h3>
+<div id="7dc5cde0" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Data Shape: </span><span class="sc">{</span>data<span class="sc">.</span>shape<span class="sc">}</span><span class="ch">\n</span><span class="ss">'</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Data datatypes: </span><span class="ch">\n</span><span class="sc">{</span>data<span class="sc">.</span>dtypes<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data Shape: (48895, 16)
+
+Data datatypes: 
+id                                  int64
+name                               object
+host_id                             int64
+host_name                          object
+neighbourhood_group                object
+neighbourhood                      object
+latitude                          float64
+longitude                         float64
+room_type                          object
+price                               int64
+minimum_nights                      int64
+number_of_reviews                   int64
+last_review                        object
+reviews_per_month                 float64
+calculated_host_listings_count      int64
+availability_365                    int64
+dtype: object</code></pre>
+</div>
+</div>
+</section>
+<section id="summary-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="summary-statistics">Summary Statistics</h3>
+<div id="075e2122" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data.info()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>data.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 48895 entries, 0 to 48894
+Data columns (total 16 columns):
+ #   Column                          Non-Null Count  Dtype  
+---  ------                          --------------  -----  
+ 0   id                              48895 non-null  int64  
+ 1   name                            48879 non-null  object 
+ 2   host_id                         48895 non-null  int64  
+ 3   host_name                       48874 non-null  object 
+ 4   neighbourhood_group             48895 non-null  object 
+ 5   neighbourhood                   48895 non-null  object 
+ 6   latitude                        48895 non-null  float64
+ 7   longitude                       48895 non-null  float64
+ 8   room_type                       48895 non-null  object 
+ 9   price                           48895 non-null  int64  
+ 10  minimum_nights                  48895 non-null  int64  
+ 11  number_of_reviews               48895 non-null  int64  
+ 12  last_review                     38843 non-null  object 
+ 13  reviews_per_month               38843 non-null  float64
+ 14  calculated_host_listings_count  48895 non-null  int64  
+ 15  availability_365                48895 non-null  int64  
+dtypes: float64(3), int64(7), object(6)
+memory usage: 6.0+ MB</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">host_id</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">price</th>
+<th data-quarto-table-cell-role="th">minimum_nights</th>
+<th data-quarto-table-cell-role="th">number_of_reviews</th>
+<th data-quarto-table-cell-role="th">reviews_per_month</th>
+<th data-quarto-table-cell-role="th">calculated_host_listings_count</th>
+<th data-quarto-table-cell-role="th">availability_365</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>4.889500e+04</td>
+<td>4.889500e+04</td>
+<td>48895.000000</td>
+<td>48895.000000</td>
+<td>48895.000000</td>
+<td>48895.000000</td>
+<td>48895.000000</td>
+<td>38843.000000</td>
+<td>48895.000000</td>
+<td>48895.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>1.901714e+07</td>
+<td>6.762001e+07</td>
+<td>40.728949</td>
+<td>-73.952170</td>
+<td>152.720687</td>
+<td>7.029962</td>
+<td>23.274466</td>
+<td>1.373221</td>
+<td>7.143982</td>
+<td>112.781327</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>1.098311e+07</td>
+<td>7.861097e+07</td>
+<td>0.054530</td>
+<td>0.046157</td>
+<td>240.154170</td>
+<td>20.510550</td>
+<td>44.550582</td>
+<td>1.680442</td>
+<td>32.952519</td>
+<td>131.622289</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>2.539000e+03</td>
+<td>2.438000e+03</td>
+<td>40.499790</td>
+<td>-74.244420</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>0.010000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>9.471945e+06</td>
+<td>7.822033e+06</td>
+<td>40.690100</td>
+<td>-73.983070</td>
+<td>69.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>0.190000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>1.967728e+07</td>
+<td>3.079382e+07</td>
+<td>40.723070</td>
+<td>-73.955680</td>
+<td>106.000000</td>
+<td>3.000000</td>
+<td>5.000000</td>
+<td>0.720000</td>
+<td>1.000000</td>
+<td>45.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>2.915218e+07</td>
+<td>1.074344e+08</td>
+<td>40.763115</td>
+<td>-73.936275</td>
+<td>175.000000</td>
+<td>5.000000</td>
+<td>24.000000</td>
+<td>2.020000</td>
+<td>2.000000</td>
+<td>227.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>3.648724e+07</td>
+<td>2.743213e+08</td>
+<td>40.913060</td>
+<td>-73.712990</td>
+<td>10000.000000</td>
+<td>1250.000000</td>
+<td>629.000000</td>
+<td>58.500000</td>
+<td>327.000000</td>
+<td>365.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="identifying-null-values-duplicates" class="level3">
+<h3 class="anchored" data-anchor-id="identifying-null-values-duplicates">Identifying Null values &amp; Duplicates</h3>
+<div id="7472eacd" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Null Values: </span><span class="sc">{</span>data<span class="sc">.</span>isna()<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ch">\n</span><span class="ss">'</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Duplicated Values: </span><span class="sc">{</span>data<span class="sc">.</span>duplicated()<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Null Values: id                                    0
+name                                 16
+host_id                               0
+host_name                            21
+neighbourhood_group                   0
+neighbourhood                         0
+latitude                              0
+longitude                             0
+room_type                             0
+price                                 0
+minimum_nights                        0
+number_of_reviews                     0
+last_review                       10052
+reviews_per_month                 10052
+calculated_host_listings_count        0
+availability_365                      0
+dtype: int64
+
+Duplicated Values: 0</code></pre>
+</div>
+</div>
+</section>
+<section id="correlation-matrix-ranked-with-top-ten-correlations" class="level3">
+<h3 class="anchored" data-anchor-id="correlation-matrix-ranked-with-top-ten-correlations">Correlation Matrix (Ranked with Top Ten Correlations)</h3>
+<div id="2dcee0c7" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># creating correlation matrix</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="op">=</span> data.corr()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># flattening matrix</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>flattened_matrix <span class="op">=</span> corr_matrix.stack().reset_index()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#renaming columns</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>flattened_matrix.columns <span class="op">=</span> [<span class="st">'Variable_1'</span>, <span class="st">'Variable_2'</span>, <span class="st">'Correlation'</span>]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># removing duplicate variable names</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>flattened_matrix <span class="op">=</span> flattened_matrix.loc[flattened_matrix[<span class="st">'Variable_1'</span>] <span class="op">!=</span> flattened_matrix[<span class="st">'Variable_2'</span>]]</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>corr_column <span class="op">=</span> flattened_matrix[<span class="st">'Correlation'</span>]</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>flattened_matrix <span class="op">=</span> flattened_matrix.iloc[<span class="bu">abs</span>(corr_column).argsort()[::<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>flattened_matrix <span class="op">=</span> flattened_matrix.loc[flattened_matrix[<span class="st">'Correlation'</span>].duplicated()]</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Top 10 Variable Correlations: </span><span class="ch">\n</span><span class="sc">{</span>flattened_matrix<span class="sc">.</span>head(<span class="dv">10</span>)<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Top 10 Variable Correlations: 
+                        Variable_1                      Variable_2  \
+10                         host_id                              id   
+67               number_of_reviews               reviews_per_month   
+60               number_of_reviews                              id   
+71               reviews_per_month                         host_id   
+70               reviews_per_month                              id   
+89  calculated_host_listings_count                availability_365   
+19                         host_id                availability_365   
+79               reviews_per_month                availability_365   
+69               number_of_reviews                availability_365   
+18                         host_id  calculated_host_listings_count   
+
+    Correlation  
+10     0.588290  
+67     0.549868  
+60    -0.319760  
+71     0.296417  
+70     0.291828  
+89     0.225701  
+19     0.203492  
+79     0.185791  
+69     0.172028  
+18     0.154950  </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="takwaways-from-preliminary-eda" class="level2">
+<h2 class="anchored" data-anchor-id="takwaways-from-preliminary-eda">Takwaways From Preliminary EDA</h2>
+<ul>
+<li><p>Our shape function tells us we have 48895 rows and 16 features which includes our target variable <code>price</code>.</p></li>
+<li><p>The describe() function provided key summary statistics for our numerical columns which included the following metrics: count, mean, standard deviation, minimum, and maximum. This helps us obtain an idea as to the spread of our data. Our info() function gave us further information about the datatypes, columns, and amount of data we have. Through this analysis in addition to our dtypes() function we can identify that last_reviw is an object dtype but could be converted into a pandas datatime format to further utilize pandas datatime capabilities.</p></li>
+<li><p>Our isna() function informed us of the null values which are included in the dataset. The columns <code>name</code> and <code>host_name</code> have 16 and 21 null values respectively, we can address this null values by imputing a blank string to indicate the information is not provided. Our <code>reviews_per_month</code> column and <code>last_review</code> column have 10052. As these have identical amounts of null values, we can assume that if a Airbnb listing doesn’t have a review, instead zero the dataset put a null values. This can be addressed through imputing zero into the null vaues in the reviews_per_month column.</p></li>
+</ul>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<p>In order to prepare our data, for further analysis we must perform some preliminary feature engineering which will involve: - Converting the data type of the <code>last_review</code> column. - Imputing zeros into the <code>reviews_per_month</code> null values - Imputing an empty string into the null values for <code>name</code> and `host_name</p>
+</section>
+</section>
+<section id="prelimniary-feature-engineering" class="level2">
+<h2 class="anchored" data-anchor-id="prelimniary-feature-engineering">Prelimniary Feature Engineering</h2>
 </section>
 
 </main>
