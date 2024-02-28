@@ -80,4 +80,4 @@ Thank you for contributing to the Airbnb Analysis project! Your efforts help mak
 
 ---
 
-This contribution guide is part of our Airbnb Analysis project. Made with ❤️ by the Airbnb Analysis team. Licensed under the [CC0](./LICENSE).
+This contribution guide is part of our Airbnb Analysis project. Made with ❤️ by the Airbnb Analysis team. Licensed under the [MIT License](./LICENSE).
