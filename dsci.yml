@@ -15,20 +15,19 @@ dependencies:
   - ipykernel
   - pip[version='>=23.2.1']
   - seaborn
-  - librosa
   - omegaconf
-  - keras
   - hydra-core
   - flask
   - gunicorn
   - portaudio
   - scipy
   - python-sounddevice
-  - tensorflow
-  - uwsgi
   - xgboost
   - altair
   - plotly
   - folium
   - statsmodels
   - numpy
+  - jupyter
+  - quarto
+  - psutil
