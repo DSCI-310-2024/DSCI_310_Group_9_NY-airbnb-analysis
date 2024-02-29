@@ -67,7 +67,7 @@ print(f'Duplicated Values: {data.duplicated().sum()}')
 ### Correlation Matrix (Ranked with Top Ten Correlations)
 ```{python}
 # creating correlation matrix
-corr_matrix = data.corr()
+corr_matrix = data.select_dtypes('int64')
 
 def rank_correlations(corr_matrix):
     # flattening matrix
@@ -117,7 +117,7 @@ In order to prepare our data, for further analysis we must perform some prelimin
 1. **Convert `id` and `host_id` into object datatypes to prepare them to be dropped.**
 ```{python}
 data['id'] = str(data['id'])
-data['host_id'] = str(data['hose_id'])
+data['host_id'] = str(data['host_id'])
 ```
 
 2. **Convert the data type of the `last_review` column to datetime.**

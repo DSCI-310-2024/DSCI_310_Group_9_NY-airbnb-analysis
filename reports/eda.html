@@ -128,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="92ebe6b9" class="cell" data-execution_count="1">
+<div id="0dfd8512" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -141,11 +141,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="aim" class="level2">
 <h2 class="anchored" data-anchor-id="aim">Aim</h2>
 <p>The aim of this data analysis project is to identify which of the factors in the Airbnb Kaggle Dataset are strong predictors of price. Doing so will allow us obtain information which can determine if Airbnbs are accurately priced.</p>
-<div id="498ba615" class="cell" data-execution_count="2">
+<div id="60bb3e73" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loading the data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">"../data/raw/AB_NYC_2019.csv"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>data.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="24">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
@@ -237,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="data-shape-datatypes" class="level3">
 <h3 class="anchored" data-anchor-id="data-shape-datatypes">Data Shape &amp; Datatypes</h3>
-<div id="d6857f4a" class="cell" data-execution_count="3">
+<div id="30d221ad" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Data Shape: </span><span class="sc">{</span>data<span class="sc">.</span>shape<span class="sc">}</span><span class="ch">\n</span><span class="ss">'</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -269,7 +269,7 @@ dtype: object</code></pre>
 </section>
 <section id="summary-statistics" class="level3">
 <h3 class="anchored" data-anchor-id="summary-statistics">Summary Statistics</h3>
-<div id="14514fcf" class="cell" data-execution_count="4">
+<div id="d69c5bd2" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data.info()</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>data.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -298,7 +298,7 @@ Data columns (total 16 columns):
 dtypes: float64(3), int64(7), object(6)
 memory usage: 6.0+ MB</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="26">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
 
@@ -432,7 +432,7 @@ memory usage: 6.0+ MB</code></pre>
 </section>
 <section id="identifying-null-values-duplicates" class="level3">
 <h3 class="anchored" data-anchor-id="identifying-null-values-duplicates">Identifying Null values &amp; Duplicates</h3>
-<div id="0849f64a" class="cell" data-execution_count="5">
+<div id="fb2957d0" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Null Values: </span><span class="sc">{</span>data<span class="sc">.</span>isna()<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ch">\n</span><span class="ss">'</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Duplicated Values: </span><span class="sc">{</span>data<span class="sc">.</span>duplicated()<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -461,48 +461,43 @@ Duplicated Values: 0</code></pre>
 </section>
 <section id="correlation-matrix-ranked-with-top-ten-correlations" class="level3">
 <h3 class="anchored" data-anchor-id="correlation-matrix-ranked-with-top-ten-correlations">Correlation Matrix (Ranked with Top Ten Correlations)</h3>
-<div id="4f33232a" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the DataFrame to include only numeric (int or float) columns</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>numeric_data <span class="op">=</span> data.select_dtypes(include<span class="op">=</span>[np.number])</span>
+<div id="f16df5b3" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># creating correlation matrix</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="op">=</span> data.select_dtypes(<span class="st">'int64'</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating correlation matrix from the filtered numeric DataFrame</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="op">=</span> numeric_data.corr()</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>flattened_matrix <span class="op">=</span> corr_matrix.stack().reset_index()</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>flattened_matrix.columns <span class="op">=</span> [<span class="st">'Variable_1'</span>, <span class="st">'Variable_2'</span>, <span class="st">'Correlation'</span>]</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>flattened_matrix <span class="op">=</span> flattened_matrix.loc[flattened_matrix[<span class="st">'Variable_1'</span>] <span class="op">!=</span> flattened_matrix[<span class="st">'Variable_2'</span>]]</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>corr_column <span class="op">=</span> flattened_matrix[<span class="st">'Correlation'</span>]</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>flattened_matrix <span class="op">=</span> flattened_matrix.iloc[<span class="bu">abs</span>(corr_column).argsort()[::<span class="op">-</span><span class="dv">1</span>]]</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing duplicated correlations - keeping the first instance (highest absolute value)</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>flattened_matrix <span class="op">=</span> flattened_matrix.loc[<span class="op">~</span>flattened_matrix[<span class="st">'Correlation'</span>].duplicated(keep<span class="op">=</span><span class="st">'first'</span>)]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rank_correlations(corr_matrix):</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># flattening matrix</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    flattened_matrix <span class="op">=</span> corr_matrix.stack().reset_index()</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">#renaming columns</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    flattened_matrix.columns <span class="op">=</span> [<span class="st">'Variable_1'</span>, <span class="st">'Variable_2'</span>, <span class="st">'Correlation'</span>]</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># removing duplicate variable names</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    flattened_matrix <span class="op">=</span> flattened_matrix.loc[flattened_matrix[<span class="st">'Variable_1'</span>] <span class="op">!=</span> flattened_matrix[<span class="st">'Variable_2'</span>]]</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    corr_column <span class="op">=</span> flattened_matrix[<span class="st">'Correlation'</span>]</span>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Top 10 Variable Correlations: </span><span class="ch">\n</span><span class="sc">{</span>flattened_matrix<span class="sc">.</span>head(<span class="dv">10</span>)<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    flattened_matrix <span class="op">=</span> flattened_matrix.iloc[<span class="bu">abs</span>(corr_column).argsort()[::<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    flattened_matrix <span class="op">=</span> flattened_matrix.loc[flattened_matrix[<span class="st">'Correlation'</span>].duplicated()]</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'Top 10 Variable Correlations: </span><span class="ch">\n</span><span class="sc">{</span>flattened_matrix<span class="sc">.</span>head(<span class="dv">10</span>)<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>rank_correlations(corr_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Top 10 Variable Correlations: 
-                        Variable_1                      Variable_2  \
-1                               id                         host_id   
-76               reviews_per_month               number_of_reviews   
-6                               id               number_of_reviews   
-17                         host_id               reviews_per_month   
-7                               id               reviews_per_month   
-98                availability_365  calculated_host_listings_count   
-91                availability_365                         host_id   
-97                availability_365               reviews_per_month   
-96                availability_365               number_of_reviews   
-81  calculated_host_listings_count                         host_id   
-
-    Correlation  
-1      0.588290  
-76     0.549868  
-6     -0.319760  
-17     0.296417  
-7      0.291828  
-98     0.225701  
-91     0.203492  
-97     0.185791  
-96     0.172028  
-81     0.154950  </code></pre>
+        Variable_1 Variable_2  Correlation
+341678       48811    host_id    274012871
+340873       48696    host_id    273392981
+340537       48648    host_id    273392981
+340390       48627    host_id    273354185
+340404       48629    host_id    273354185
+340432       48633    host_id    273354185
+340411       48630    host_id    273354185
+340425       48632    host_id    273354185
+340418       48631    host_id    273354185
+341104       48729    host_id    272477673</code></pre>
 </div>
 </div>
 </section>
@@ -510,39 +505,50 @@ Duplicated Values: 0</code></pre>
 <section id="takwaways-from-preliminary-eda" class="level2">
 <h2 class="anchored" data-anchor-id="takwaways-from-preliminary-eda">Takwaways From Preliminary EDA</h2>
 <ul>
-<li><p>Our shape function tells us we have 48895 rows and 16 features which includes our target variable <code>price</code>.</p></li>
+<li>Our shape function tells us we have 48895 rows and 16 features which includes our target variable <code>price</code>.</li>
+</ul>
+<p>-Looking at the columns from our info() function we can identify that name is a text data which could provide some valuable insights. We can also infer that any id information (<code>id</code> and <code>host_id</code>) and variables such as <code>host_name</code> will not provide any key information, thus, we can drop them for our data analysis.</p>
+<ul>
 <li><p>The describe() function provided key summary statistics for our numerical columns which included the following metrics: count, mean, standard deviation, minimum, and maximum. This helps us obtain an idea as to the spread of our data. Our info() function gave us further information about the datatypes, columns, and amount of data we have. Through this analysis in addition to our dtypes() function we can identify that last_reviw is an object dtype but could be converted into a pandas datatime format to further utilize pandas datatime capabilities. Examples of such would be splitting the data into year, month and day to identify if there are any temporal patterns across months of years.</p></li>
 <li><p>Our isna() function informed us of the null values which are included in the dataset. The columns <code>name</code> and <code>host_name</code> have 16 and 21 null values respectively, we can address this null values by imputing a blank string to indicate the information is not provided. Our <code>reviews_per_month</code> column and <code>last_review</code> column have 10052. As these have identical amounts of null values, we can assume that if a Airbnb listing doesn’t have a review, instead zero the dataset put a null values. This can be addressed through imputing zero into the null vaues in the reviews_per_month column.</p></li>
 </ul>
 <section id="summary" class="level3">
 <h3 class="anchored" data-anchor-id="summary">Summary</h3>
-<p>In order to prepare our data, for further analysis we must perform some preliminary feature engineering which will involve:</p>
+<p>In order to prepare our data for further analysis we must perform some preliminary feature engineering which will involve: - Convert <code>id</code> and <code>host_id</code> into object datatypes to prepare them to be dropped. - Converting the data type of the <code>last_review</code> column. - Then split the <code>last_review</code> into year, month and day. - Imputing zeros into the <code>reviews_per_month</code> null values - Imputing an empty string into the null values for <code>name</code> and `host_name</p>
+<p>After these changes are made we can proceed to split our data into a train and test set and label our data by data type (numeric, categorical, text, and drop columns). ### Preliminary Feature Engineering In order to prepare our data, for further analysis we must perform some preliminary feature engineering which will involve:</p>
 <ol type="1">
-<li><strong>Convert the data type of the <code>last_review</code> column to datetime.</strong></li>
+<li><strong>Convert <code>id</code> and <code>host_id</code> into object datatypes to prepare them to be dropped.</strong></li>
 </ol>
-<div id="4aeb9375" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'last_review'</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">'last_review'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="af0c144a" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'id'</span>] <span class="op">=</span> <span class="bu">str</span>(data[<span class="st">'id'</span>])</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'host_id'</span>] <span class="op">=</span> <span class="bu">str</span>(data[<span class="st">'host_id'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
-<li><strong>Split the <code>last_review</code> column into year, month, and day columns.</strong></li>
+<li><strong>Convert the data type of the <code>last_review</code> column to datetime.</strong></li>
 </ol>
-<div id="142333fd" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'year'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.year</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'month'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.month</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'day'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.day</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ce2bb84d" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'last_review'</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">'last_review'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="3" type="1">
-<li><strong>Impute zeros into the <code>reviews_per_month</code> column for null values.</strong></li>
+<li><strong>Split the <code>last_review</code> column into year, month, and day columns.</strong></li>
 </ol>
-<div id="563f1889" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'reviews_per_month'</span>] <span class="op">=</span> data[<span class="st">'reviews_per_month'</span>].fillna(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5a1fecee" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'year'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.year</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'month'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.month</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'day'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.day</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="4" type="1">
+<li><strong>Impute zeros into the <code>reviews_per_month</code> column for null values.</strong></li>
+</ol>
+<div id="79e415f3" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'reviews_per_month'</span>] <span class="op">=</span> data[<span class="st">'reviews_per_month'</span>].fillna(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="5" type="1">
 <li><strong>Impute an empty string into the <code>name</code> and <code>host_name</code> columns for null values.</strong></li>
 </ol>
-<div id="81b5c64e" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'name'</span>] <span class="op">=</span> data[<span class="st">'name'</span>].fillna(<span class="st">''</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'host_name'</span>] <span class="op">=</span> data[<span class="st">'host_name'</span>].fillna(<span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="faeb9014" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'name'</span>] <span class="op">=</span> data[<span class="st">'name'</span>].fillna(<span class="st">''</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'host_name'</span>] <span class="op">=</span> data[<span class="st">'host_name'</span>].fillna(<span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>After these changes are made we can proceed to split our data and perform further analysis.</p>
 </section>
@@ -553,24 +559,24 @@ Duplicated Values: 0</code></pre>
 <section id="putting-it-all-together" class="level3">
 <h3 class="anchored" data-anchor-id="putting-it-all-together">Putting It All Together</h3>
 <p>Now, let’s put all these steps together to perform your preliminary feature engineering tasks.</p>
-<div id="de0ab37c" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert last_review to datetime</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'last_review'</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">'last_review'</span>])</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract year, month, and day from last_review</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'year'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.year</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'month'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.month</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'day'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.day</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Impute zeros for reviews_per_month null values</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'reviews_per_month'</span>] <span class="op">=</span> data[<span class="st">'reviews_per_month'</span>].fillna(<span class="dv">0</span>)</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Impute empty string for name and host_name null values</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'name'</span>] <span class="op">=</span> data[<span class="st">'name'</span>].fillna(<span class="st">''</span>)</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'host_name'</span>] <span class="op">=</span> data[<span class="st">'host_name'</span>].fillna(<span class="st">''</span>)</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>data.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="33">
+<div id="ae1ca959" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert last_review to datetime</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'last_review'</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">'last_review'</span>])</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract year, month, and day from last_review</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'year'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.year</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'month'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.month</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'day'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.day</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Impute zeros for reviews_per_month null values</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'reviews_per_month'</span>] <span class="op">=</span> data[<span class="st">'reviews_per_month'</span>].fillna(<span class="dv">0</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Impute empty string for name and host_name null values</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'name'</span>] <span class="op">=</span> data[<span class="st">'name'</span>].fillna(<span class="st">''</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'host_name'</span>] <span class="op">=</span> data[<span class="st">'host_name'</span>].fillna(<span class="st">''</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>data.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
 <div>
 
 
@@ -602,9 +608,9 @@ Duplicated Values: 0</code></pre>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
-<td>2539</td>
+<td>0 2539\n1 2595\n2 ...</td>
 <td>Clean &amp; quiet apt home by the park</td>
-<td>2787</td>
+<td>0 2787\n1 2845\n2 ...</td>
 <td>John</td>
 <td>Brooklyn</td>
 <td>Kensington</td>
@@ -624,9 +630,9 @@ Duplicated Values: 0</code></pre>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
-<td>2595</td>
+<td>0 2539\n1 2595\n2 ...</td>
 <td>Skylit Midtown Castle</td>
-<td>2845</td>
+<td>0 2787\n1 2845\n2 ...</td>
 <td>Jennifer</td>
 <td>Manhattan</td>
 <td>Midtown</td>
@@ -646,9 +652,9 @@ Duplicated Values: 0</code></pre>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
-<td>3647</td>
+<td>0 2539\n1 2595\n2 ...</td>
 <td>THE VILLAGE OF HARLEM....NEW YORK !</td>
-<td>4632</td>
+<td>0 2787\n1 2845\n2 ...</td>
 <td>Elisabeth</td>
 <td>Manhattan</td>
 <td>Harlem</td>
