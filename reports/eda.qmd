@@ -10,7 +10,7 @@ format:
         toc-depth: 3
 # bibliography: references.bibit
 editor: source
-jupyter: python3
+jupyter: dsci
 
 ---
 
@@ -33,6 +33,7 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.compose import make_column_transformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.impute import SimpleImputer
+from sklearn.dummy import DummyRegressor
 ```
 
 ## Aim
@@ -210,15 +211,15 @@ print(f"Drop Columns: {drop_data}\n")
 
 ### Figure 1. Correlation Heat Map for Numerical Data
 ```{python}
-train_corr_matrix = train_df[numerical_data]
+# train_corr_matrix = train_df[numerical_data]
 
-plt.figure(figsize=(10,6))
-ax = sns.heatmap(train_corr_matrix, annot=True, linewidth=0.5, cmap="coolwarm")
-plt.title("Correlation Heat map")
-plt.show()
+# plt.figure(figsize=(10,6))
+# ax = sns.heatmap(train_corr_matrix, annot=True, linewidth=0.5, cmap="coolwarm")
+# plt.title("Correlation Heat map")
+# plt.show()
 
 
-rank_correlations(train_corr_matrix)
+# rank_correlations(train_corr_matrix)
 
 ```
 
@@ -271,34 +272,36 @@ plt.show()
 Splitting Data into train and test set and performing imputation on missing values
 ```{python}
 y = data['price']
-X = data.drop('price', axis = 1)
-X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.2, randomstate=123)
+X = data.drop('price', axis=1)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
 def impute_random(df, column_name):
     probs = df[column_name].value_counts(normalize=True)
     missing = df[column_name].isna()
-    imputed_data = np.random.choice(probs.index, size=missing.sum(), p =probs.values)
-    df.loc[missing, column_name] = imputed_years
-    retrun df
+    imputed_data = np.random.choice(probs.index, size=missing.sum(), p=probs.values)
+    df.loc[missing, column_name] = imputed_data  # Corrected variable name here
+    return df
 
-numeric_data.remove('last_review')
 
-date_data = ['year', 'month','day']
+numerical_data = numerical_data.tolist()  # Convert to list if it's not already
+
+# Check if 'last_review' exists in numerical_data before removing
+if 'last_review' in numerical_data:
+    numerical_data.remove('last_review')
+
+date_data = ['year', 'month', 'day']
 
 # Performing imputation on the null values in our date info
-for i in date_date:
-    X_train = impute_random(X_train, i)
-    X-test = imput_random(X_train, i)
-
-
-
+for i in date_data:  # Corrected the loop variable name
+    X_train = impute_random(X_train, i)  # Ensure correct function call
+    X_test = impute_random(X_test, i)  # Corrected the function name and the argument
 ```
 
 
 ## Defining Transformations 
 ```{python}
 # Numerical Transformer
-numeric_transformer = StandardScaler()
+numerical_transformer = StandardScaler()
 
 # Categorical Transformer
 categorical_transformer = OneHotEncoder(handle_unknown='ignore')
@@ -312,9 +315,9 @@ text_transformer = CountVectorizer()
 
 preprocessor = make_column_transformer(
     ('drop', drop_data),
-    (numeric_transfomer, numerical_data),
-    (categorical_transfrmer, categorical_data),
-    (text_transofmer, text_data),
+    (numerical_transformer, numerical_data),
+    (categorical_transformer, categorical_data),
+    (text_transformer, text_data),
     remainder='passthrough'
 )
 
@@ -324,15 +327,15 @@ preprocessor = make_column_transformer(
 # Creating a Baseline Model
 
 ```{python}
-from sklearn.dummy import DummyRegressor
+
 reg = DummyRegressor()
 
 ```
 
 ```{python}
-pipe = make_pipeline(ct, reg)
+pipe = make_pipeline(preprocessor, reg)
 pipe.fit(X_train, y_train)
-pipe.predict(X_train)
+# pipe.predict(X_train)
 f'Test Score is: {pipe.score(X_train, y_train)}'
 
 ```
