@@ -10,8 +10,7 @@ format:
         toc-depth: 3
 # bibliography: references.bibit
 editor: source
-jupyter: 
-    kernel: dsci 
+jupyter: python3
 
 ---
 
@@ -25,6 +24,15 @@ from sklearn.model_selection import train_test_split
 import plotly.express as px
 import plotly.graph_objects as go
 import folium
+
+from sklearn.pipeline import make_pipeline
+from sklearn.feature_extraction.text import CountVectorizer
+import xgboost as xg
+from sklearn.dummy import DummyClassifier
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.compose import make_column_transformer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.impute import SimpleImputer
 ```
 
 ## Aim
@@ -167,3 +175,33 @@ data['host_name'] = data['host_name'].fillna('')
 
 data.head(3)
 ```
+
+### Splitting Data
+```{python}
+train_df, test_df = train_test_split(data, test_size=0.2)
+
+# numeric data
+numerical_data = data.select_dtypes(include=["int64", "float64"])
+numerical_data = numerical_data.columns
+
+# text data
+text_data = ["name"]
+
+# drop data
+drop_data = ["host_name", "host_id", "id"]
+
+# Categorical Data
+categorical_data = data.select_dtypes(include=["object"])
+categorical_data = categorical_data.columns
+columns_to_exclude = text_data + drop_data
+categorical_data = [col for col in categorical_data if col not in columns_to_exclude]
+
+
+print(f'Train Shape: {train_df.shape}\nTest Shape: {test_df.shape}\n')
+print(f"Numerical Columns: {numerical_data}/n")
+print(f"Categorical Columns: {categorical_data}\n")
+print(f"Text Data: {text_data}\n")
+print(f"Drop Columns: {drop_data}\n")
+
+```
+
