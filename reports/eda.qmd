@@ -205,3 +205,136 @@ print(f"Drop Columns: {drop_data}\n")
 
 ```
 
+# Exploratory Data Analysis (Visualizations)
+
+
+### Figure 1. Correlation Heat Map for Numerical Data
+```{python}
+train_corr_matrix = train_df[numerical_data]
+
+plt.figure(figsize=(10,6))
+ax = sns.heatmap(train_corr_matrix, annot=True, linewidth=0.5, cmap="coolwarm")
+plt.title("Correlation Heat map")
+plt.show()
+
+
+rank_correlations(train_corr_matrix)
+
+```
+
+
+
+### Figure 2. Price vs Number of Reviews Coloured by Room Type Scatterplot
+```{python}
+sns.scatterplot(train_df, x = 'price', y='number_of_reviews', hue='room_type')
+plt.title("Price vs Number of Reviews Coloured by Room Type")
+plt.xlabel("Price")
+plt.ylabel("# of Reviews")
+plt.show()
+```
+
+### Figure 3. Price vs Reviews Per Month Coloured by Room Type Scatterplot
+```{python}
+sns.scatterplot(train_df, x = 'price', y='reviews_per_month', hue='room_type')
+plt.title("Price vs Reviews Per Month Coloured by Room Type")
+plt.xlabel("Price")
+plt.ylabel("# of Reviews per Month")
+plt.show()
+```
+
+
+### Figure 4. Neighbourhood Group vs Log Scaled Price Coloured Boxplot
+```{python}
+log_price = np.log(train_df['price'])
+sns.boxplot(data=train_df, x=log_price, y='neighbourhood_group')
+plt.title("Boxplot of Neighbourhood Group vs Log Price")
+plt.show()
+
+```
+
+### Figure 5. Room Type Vs Price Box plot
+- This visualiation was created to see if there is any relationship between room type and price.
+- As we can see price differs among the different room types indicating that room type may be able to account for the variation in price. 
+```{python}
+
+sns.boxplot(data=train_df, x='price', y='room_type')
+plt.title("Boxplot of Price against Room Type")
+plt.show()
+
+```
+
+
+# Preprocessing & Transformations
+
+
+# Preparing Data
+Splitting Data into train and test set and performing imputation on missing values
+```{python}
+y = data['price']
+X = data.drop('price', axis = 1)
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.2, randomstate=123)
+
+def impute_random(df, column_name):
+    probs = df[column_name].value_counts(normalize=True)
+    missing = df[column_name].isna()
+    imputed_data = np.random.choice(probs.index, size=missing.sum(), p =probs.values)
+    df.loc[missing, column_name] = imputed_years
+    retrun df
+
+numeric_data.remove('last_review')
+
+date_data = ['year', 'month','day']
+
+# Performing imputation on the null values in our date info
+for i in date_date:
+    X_train = impute_random(X_train, i)
+    X-test = imput_random(X_train, i)
+
+
+
+```
+
+
+## Defining Transformations 
+```{python}
+# Numerical Transformer
+numeric_transformer = StandardScaler()
+
+# Categorical Transformer
+categorical_transformer = OneHotEncoder(handle_unknown='ignore')
+
+# Text Data Transformer
+text_transformer = CountVectorizer()
+
+```
+
+```{python}
+
+preprocessor = make_column_transformer(
+    ('drop', drop_data),
+    (numeric_transfomer, numerical_data),
+    (categorical_transfrmer, categorical_data),
+    (text_transofmer, text_data),
+    remainder='passthrough'
+)
+
+```
+
+
+# Creating a Baseline Model
+
+```{python}
+from sklearn.dummy import DummyRegressor
+reg = DummyRegressor()
+
+```
+
+```{python}
+pipe = make_pipeline(ct, reg)
+pipe.fit(X_train, y_train)
+pipe.predict(X_train)
+f'Test Score is: {pipe.score(X_train, y_train)}'
+
+```
+
+
