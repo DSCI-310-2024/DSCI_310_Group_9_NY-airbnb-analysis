@@ -1,6 +1,6 @@
 ---
 title: "DSCI 310: Airbnb Price Analysis"
-author: "Oliver Gullery, Prithvi, Riddhi Battu, Rashi"
+author: "Oliver Gullery, Prithvi Sureka, Riddhi Battu, Rashi Selarka"
 format: 
     html: 
         toc: true
@@ -211,15 +211,15 @@ print(f"Drop Columns: {drop_data}\n")
 
 ### Figure 1. Correlation Heat Map for Numerical Data
 ```{python}
-# train_corr_matrix = train_df[numerical_data]
+train_corr_matrix = train_df[numerical_data]
 
-# plt.figure(figsize=(10,6))
-# ax = sns.heatmap(train_corr_matrix, annot=True, linewidth=0.5, cmap="coolwarm")
-# plt.title("Correlation Heat map")
-# plt.show()
+plt.figure(figsize=(10,6))
+ax = sns.heatmap(train_corr_matrix, annot=True, linewidth=0.5, cmap="coolwarm")
+plt.title("Correlation Heat map")
+plt.show()
 
 
-# rank_correlations(train_corr_matrix)
+rank_correlations(train_corr_matrix)
 
 ```
 
