@@ -1,0 +1,355 @@
+---
+title: "DSCI 310: Airbnb Price Analysis"
+author: "Oliver Gullery, Prithvi Sureka, Riddhi Battu, Rashi Selarka"
+format: 
+    html: 
+        toc: true
+        toc-depth: 3
+    pdf:
+        toc: true
+        toc-depth: 3
+# bibliography: references.bibit
+editor: source
+jupyter: dsci
+
+---
+
+
+```{python}
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+import plotly.express as px
+import plotly.graph_objects as go
+import folium
+
+from sklearn.pipeline import make_pipeline
+from sklearn.feature_extraction.text import CountVectorizer
+import xgboost as xg
+from sklearn.dummy import DummyClassifier
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.compose import make_column_transformer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.impute import SimpleImputer
+from sklearn.dummy import DummyRegressor
+import requests
+from branca.colormap import linear
+```
+
+## Aim
+The aim of this data analysis project is to identify which of the factors in the Airbnb Dataset are strong predictors of price. Doing so will allow us obtain information which can determine if Airbnbs are accurately priced. 
+
+
+```{python}
+# loading the data
+url_listings = "http://data.insideairbnb.com/united-states/ny/new-york-city/2024-02-06/visualisations/listings.csv"
+
+data = pd.read_csv(url_listings)
+data.head(3)
+```
+
+### Export the dataset to our data/raw folder
+```{python}
+data.to_csv("../data/raw/airbnb_data_2024")
+```
+
+
+### Data Shape & Datatypes
+```{python}
+print(f'Data Shape: {data.shape}\n')
+
+
+
+print(f'Data datatypes: \n{data.dtypes}')
+```
+
+### Summary Statistics
+```{python}
+data.info()
+
+data.describe()
+
+```
+
+### Identifying Null values & Duplicates
+```{python}
+
+print(f'Null Values: {data.isna().sum()}\n')
+
+print(f'Duplicated Values: {data.duplicated().sum()}')
+
+```
+
+### Correlation Matrix (Ranked with Top Ten Correlations)
+```{python}
+# creating correlation matrix
+corr_matrix = data.select_dtypes('int64')
+
+def rank_correlations(corr_matrix):
+    # flattening matrix
+    flattened_matrix = corr_matrix.stack().reset_index()
+
+    #renaming columns
+    flattened_matrix.columns = ['Variable_1', 'Variable_2', 'Correlation']
+
+    # removing duplicate variable names
+    flattened_matrix = flattened_matrix.loc[flattened_matrix['Variable_1'] != flattened_matrix['Variable_2']]
+
+    corr_column = flattened_matrix['Correlation']
+
+    flattened_matrix = flattened_matrix.iloc[abs(corr_column).argsort()[::-1]]
+
+    flattened_matrix = flattened_matrix.loc[flattened_matrix['Correlation'].duplicated()]
+
+
+    print(f'Top 10 Variable Correlations: \n{flattened_matrix.head(10)}')
+
+rank_correlations(corr_matrix)
+
+```
+
+## Takwaways From Preliminary EDA
+- Our shape function tells us we have 48895 rows and 16 features which includes our target variable `price`. 
+
+-Looking at the columns from our info() function we can identify that name is a text data which could provide some valuable insights. We can also infer that any id information (`id` and `host_id`) and variables such as `host_name` will not provide any key information, thus, we can drop them for our data analysis.
+
+- The describe() function provided key summary statistics for our numerical columns which included the following metrics: count, mean, standard deviation, minimum, and maximum. This helps us obtain an idea as to the spread of our data. Our info() function gave us further information about the datatypes, columns, and amount of data we have. Through this analysis in addition to our dtypes() function we can identify that last_reviw is an object dtype but could be converted into a pandas datatime format to further utilize pandas datatime capabilities. Examples of such would be splitting the data into year, month and day to identify if there are any temporal patterns across months of years. 
+
+- Our isna() function informed us of the null values which are included in the dataset. The columns `name` and `host_name` have 16 and 21 null values respectively, we can address this null values by imputing a blank string to indicate the information is not provided. Our `reviews_per_month` column and `last_review` column have 10052. As these have identical amounts of null values, we can assume that if a Airbnb listing doesn't have a review, instead zero the dataset put a null values. This can be addressed through imputing zero into the null vaues in the reviews_per_month column.  
+
+### Summary
+In order to prepare our data for further analysis we must perform some preliminary feature engineering which will involve:
+- Convert `id` and `host_id` into object datatypes to prepare them to be dropped.
+- Converting the data type of the `last_review` column.
+    - Then split the `last_review` into year, month and day.
+- Imputing zeros into the `reviews_per_month` null values
+- Imputing an empty string into the null values for `name` and `host_name
+
+
+After these changes are made we can proceed to split our data into a train and test set and label our data by data type (numeric, categorical, text, and drop columns).
+### Preliminary Feature Engineering
+In order to prepare our data, for further analysis we must perform some preliminary feature engineering which will involve:
+
+1. **Convert `id` and `host_id` into object datatypes to prepare them to be dropped.**
+```{python}
+data['id'] = str(data['id'])
+data['host_id'] = str(data['host_id'])
+```
+
+2. **Convert the data type of the `last_review` column to datetime.**
+```{python}
+data['last_review'] = pd.to_datetime(data['last_review'])
+```
+3. **Split the `last_review` column into year, month, and day columns.**
+```{python}
+data['year'] = data['last_review'].dt.year
+data['month'] = data['last_review'].dt.month
+data['day'] = data['last_review'].dt.day
+```
+4. **Impute zeros into the `reviews_per_month` column for null values.**
+```{python}
+data['reviews_per_month'] = data['reviews_per_month'].fillna(0)
+```
+5. **Impute an empty string into the `name` and `host_name` columns for null values.**
+```{python}
+data['name'] = data['name'].fillna('')
+data['host_name'] = data['host_name'].fillna('')
+```
+
+After these changes are made we can proceed to split our data and perform further analysis.
+
+## Prelimenary Feature Engineering
+For the preliminary feature engineering, we will perform the steps above:
+
+### Putting It All Together
+Now, let's put all these steps together to perform your preliminary feature engineering tasks.
+
+```{python}
+
+# Convert last_review to datetime
+data['last_review'] = pd.to_datetime(data['last_review'])
+
+# Extract year, month, and day from last_review
+data['year'] = data['last_review'].dt.year
+data['month'] = data['last_review'].dt.month
+data['day'] = data['last_review'].dt.day
+
+# Impute zeros for reviews_per_month null values
+data['reviews_per_month'] = data['reviews_per_month'].fillna(0)
+
+# Impute empty string for name and host_name null values
+data['name'] = data['name'].fillna('')
+data['host_name'] = data['host_name'].fillna('')
+
+data.head(3)
+```
+
+### Splitting Data
+```{python}
+train_df, test_df = train_test_split(data, test_size=0.2)
+
+# numeric data
+numerical_data = data.select_dtypes(include=["int64", "float64"])
+numerical_data = numerical_data.columns
+
+# text data
+text_data = ["name"]
+
+# drop data
+drop_data = ["host_name", "host_id", "id"]
+
+# Categorical Data
+categorical_data = data.select_dtypes(include=["object"])
+categorical_data = categorical_data.columns
+columns_to_exclude = text_data + drop_data
+categorical_data = [col for col in categorical_data if col not in columns_to_exclude]
+
+
+print(f'Train Shape: {train_df.shape}\nTest Shape: {test_df.shape}\n')
+print(f"Numerical Columns: {numerical_data}/n")
+print(f"Categorical Columns: {categorical_data}\n")
+print(f"Text Data: {text_data}\n")
+print(f"Drop Columns: {drop_data}\n")
+
+```
+
+# Exploratory Data Analysis (Visualizations)
+
+
+### Figure 1. Map with Distribution of Listings by Location and Price
+```{python}
+plt.figure(figsize=(10, 8))
+
+# Setting color limits to more typical range, e.g., 0 to 400
+# Adjust these values based on your specific dataset and its distribution
+vmin, vmax = 0, 400
+
+sc = plt.scatter(train_df['longitude'], train_df['latitude'], c=train_df['price'], cmap='viridis', s=10, alpha=0.6, vmin=vmin, vmax=vmax)
+plt.colorbar(sc, label='Price')
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title('Distribution of Listings by Location and Price')
+plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+plt.show()
+plt.figure(figsize=(10, 8))
+```
+
+
+
+### Figure 2. Price vs Number of Reviews Coloured by Room Type Scatterplot
+```{python}
+sns.scatterplot(train_df, x = 'price', y='number_of_reviews', hue='room_type')
+plt.title("Price vs Number of Reviews Coloured by Room Type")
+plt.xlabel("Price")
+plt.ylabel("# of Reviews")
+plt.show()
+```
+
+### Figure 3. Price vs Reviews Per Month Coloured by Room Type Scatterplot
+```{python}
+sns.scatterplot(train_df, x = 'price', y='reviews_per_month', hue='room_type')
+plt.title("Price vs Reviews Per Month Coloured by Room Type")
+plt.xlabel("Price")
+plt.ylabel("# of Reviews per Month")
+plt.show()
+```
+
+
+### Figure 4. Neighbourhood Group vs Log Scaled Price Coloured Boxplot
+```{python}
+log_price = np.log(train_df['price'])
+sns.boxplot(data=train_df, x=log_price, y='neighbourhood_group')
+plt.title("Boxplot of Neighbourhood Group vs Log Price")
+plt.show()
+
+```
+
+### Figure 5. Room Type Vs Price Box plot
+- This visualiation was created to see if there is any relationship between room type and price.
+- As we can see price differs among the different room types indicating that room type may be able to account for the variation in price. 
+```{python}
+
+sns.boxplot(data=train_df, x='price', y='room_type')
+plt.title("Boxplot of Price against Room Type")
+plt.show()
+
+```
+
+
+# Preprocessing & Transformations
+
+
+# Preparing Data
+Splitting Data into train and test set and performing imputation on missing values
+```{python}
+y = data['price']
+X = data.drop('price', axis=1)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
+
+def impute_random(df, column_name):
+    probs = df[column_name].value_counts(normalize=True)
+    missing = df[column_name].isna()
+    imputed_data = np.random.choice(probs.index, size=missing.sum(), p=probs.values)
+    df.loc[missing, column_name] = imputed_data  # Corrected variable name here
+    return df
+
+
+numerical_data = numerical_data.tolist()  # Convert to list if it's not already
+
+# Check if 'last_review' exists in numerical_data before removing
+if 'last_review' in numerical_data:
+    numerical_data.remove('last_review')
+
+date_data = ['year', 'month', 'day']
+
+# Performing imputation on the null values in our date info
+for i in date_data:  # Corrected the loop variable name
+    X_train = impute_random(X_train, i)  # Ensure correct function call
+    X_test = impute_random(X_test, i)  # Corrected the function name and the argument
+```
+
+
+## Defining Transformations 
+```{python}
+# Numerical Transformer
+numerical_transformer = StandardScaler()
+
+# Categorical Transformer
+categorical_transformer = OneHotEncoder(handle_unknown='ignore')
+
+# Text Data Transformer
+text_transformer = CountVectorizer()
+
+```
+
+```{python}
+
+preprocessor = make_column_transformer(
+    ('drop', drop_data),
+    (numerical_transformer, numerical_data),
+    (categorical_transformer, categorical_data),
+    (text_transformer, text_data),
+    remainder='passthrough'
+)
+
+```
+
+
+# Creating a Baseline Model
+
+```{python}
+
+reg = DummyRegressor()
+
+```
+
+```{python}
+# pipe = make_pipeline(preprocessor, reg)
+# pipe.fit(X_train, y_train)
+# pipe.predict(y_train)
+# f'Test Score is: {pipe.score(X_train, y_train)}'
+```
+
+

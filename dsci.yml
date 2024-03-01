@@ -31,3 +31,4 @@ dependencies:
   - jupyter
   - quarto
   - psutil
+  - openpyxl
