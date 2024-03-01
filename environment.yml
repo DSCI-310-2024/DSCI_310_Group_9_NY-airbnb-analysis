@@ -18,7 +18,7 @@ dependencies:
   - omegaconf
   - hydra-core
   - flask
-  - gunicorn
+  - nb_conda_kernels
   - portaudio
   - scipy
   - python-sounddevice
