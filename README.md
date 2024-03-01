@@ -7,7 +7,7 @@
 - Prithvi Sureka
 
 ## Project Summary
-At the heart of our exploration lies the vibrant, dynamic world of New York City's Airbnb landscape. Our project dives into the rich dataset detailing Airbnb's listing activity and metrics within NYC for the year 2019. Through our analysis, we aim to uncover patterns and insights into the hosts' world, geographical distribution of listings, and the underlying factors driving the popularity and pricing strategies across different neighborhoods. This gives us a unique lens to understand the nuances of urban hospitality and its ripple effects on local tourism and community dynamics.
+At the heart of our exploration lies the vibrant, dynamic world of New York City's Airbnb landscape. Our project dives into the rich dataset detailing Airbnb's listing activity and metrics within NYC for the year 2024. Through our analysis, we aim to uncover patterns and insights into the hosts' world, geographical distribution of listings, and the underlying factors driving the popularity and pricing strategies across different neighborhoods. This gives us a unique lens to understand the nuances of urban hospitality and its ripple effects on local tourism and community dynamics.
 
 ## How to Run This Analysis
 
@@ -54,7 +54,7 @@ _Please refer to `LICENSE.md` for detailed licensing information._
 
 ## Dataset Acknowledgement
 
-This project utilizes the "[New York City Airbnb Open Data](http://insideairbnb.com/get-the-data/)" dataset available on Airbnb website. The dataset encompasses a wide array of information pertinent to Airbnb listings in NYC for 2019, including host details, geographical availability, and essential metrics for insightful predictions and analyses. We extend our gratitude to Airbnb for making this dataset publicly available, facilitating a deeper understanding of the short-term rental landscape in New York City.
+This project utilizes the "[New York City Airbnb Open Data](http://insideairbnb.com/get-the-data/)" dataset available on Airbnb website. The dataset encompasses a wide array of information pertinent to Airbnb listings in NYC for 2024, including host details, geographical availability, and essential metrics for insightful predictions and analyses. We extend our gratitude to Airbnb for making this dataset publicly available, facilitating a deeper understanding of the short-term rental landscape in New York City.
 
 ## Inspiration for Analysis
 
