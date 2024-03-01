@@ -15,7 +15,7 @@ To execute our data analysis, follow these steps:
 
 1. **Clone the Repository**: Clone this repository to your local machine to get started.
    ```
-   git clone https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Casualties-From-Tornado-Data.git
+   git clone https://github.com/DSCI-310-2024/DSCI_310_Group_9_NY-airbnb-analysis
    ```
 2. **Navigate to Project Directory**: Change your directory to the project folder.
    ```
@@ -54,7 +54,7 @@ _Please refer to `LICENSE.md` for detailed licensing information._
 
 ## Dataset Acknowledgement
 
-This project utilizes the "[New York City Airbnb Open Data](https://www.kaggle.com/datasets/dgomonov/new-york-city-airbnb-open-data)" dataset available on Kaggle. The dataset encompasses a wide array of information pertinent to Airbnb listings in NYC for 2019, including host details, geographical availability, and essential metrics for insightful predictions and analyses. We extend our gratitude to Airbnb for making this dataset publicly available, facilitating a deeper understanding of the short-term rental landscape in New York City.
+This project utilizes the "[New York City Airbnb Open Data](http://insideairbnb.com/get-the-data/)" dataset available on Airbnb website. The dataset encompasses a wide array of information pertinent to Airbnb listings in NYC for 2019, including host details, geographical availability, and essential metrics for insightful predictions and analyses. We extend our gratitude to Airbnb for making this dataset publicly available, facilitating a deeper understanding of the short-term rental landscape in New York City.
 
 ## Inspiration for Analysis
 
