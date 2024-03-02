@@ -91,3 +91,4 @@ target/
 
 # env file with frozen versions ignored for now
 dsci_frozen_env.yml
+/.quarto/

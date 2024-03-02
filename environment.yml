@@ -18,6 +18,7 @@ dependencies:
   - omegaconf
   - hydra-core
   - flask
+  - nb_conda_kernels
   - portaudio
   - scipy
   - python-sounddevice
@@ -30,3 +31,4 @@ dependencies:
   - jupyter
   - quarto
   - psutil
+  - openpyxl
