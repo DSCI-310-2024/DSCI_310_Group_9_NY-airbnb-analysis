@@ -92,3 +92,7 @@ target/
 # env file with frozen versions ignored for now
 dsci_frozen_env.yml
 /.quarto/
+
+
+# exlcuding quarto file as transitioned to jupyter notebook
+src/eda.qmd
