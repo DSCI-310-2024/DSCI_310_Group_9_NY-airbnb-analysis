@@ -7,7 +7,7 @@
 - Prithvi Sureka
 
 ## Project Summary
-At the heart of our exploration lies the vibrant, dynamic world of New York City's Airbnb landscape. Our project dives into the rich dataset detailing Airbnb's listing activity and metrics within NYC for the year 2024. Through our analysis, we aim to uncover patterns and insights into the hosts' world, geographical distribution of listings, and the underlying factors driving the popularity and pricing strategies across different neighborhoods. This gives us a unique lens to understand the nuances of urban hospitality and its ripple effects on local tourism and community dynamics.
+At the heart of our exploration lies the vibrant, dynamic world of New York City's Airbnb landscape. Our project dives into the rich dataset detailing Airbnb's listing activity and metrics within NYC for the data from 2011 to December 2023. Through our analysis, we aim to uncover patterns and insights into the hosts' world, geographical distribution of listings, and the underlying factors driving the popularity and pricing strategies across different neighborhoods. This gives us a unique lens to understand the nuances of urban hospitality and its ripple effects on local tourism and community dynamics.
 
 ## How to Run This Analysis
 

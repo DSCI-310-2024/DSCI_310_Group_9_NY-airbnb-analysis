@@ -1,0 +1,33 @@
+name: dsci
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python-graphviz
+  - lifelines
+  - scikit-learn
+  - matplotlib
+  - requests
+  - jinja2
+  - pandas
+  - python==3.10
+  - lightgbm
+  - ipykernel
+  - pip[version='>=23.2.1']
+  - seaborn
+  - omegaconf
+  - hydra-core
+  - flask
+  - gunicorn
+  - portaudio
+  - scipy
+  - python-sounddevice
+  - xgboost
+  - altair
+  - plotly
+  - folium
+  - statsmodels
+  - numpy
+  - jupyter
+  - quarto
+  - psutil
