@@ -96,3 +96,14 @@ dsci_frozen_env.yml
 
 # exlcuding quarto file as transitioned to jupyter notebook
 src/eda.qmd
+
+# exlude config file
+config.yml
+
+
+# Exclude eda files
+src/eda.
+
+# exlucde qurto yml
+_quarto.yml
+
