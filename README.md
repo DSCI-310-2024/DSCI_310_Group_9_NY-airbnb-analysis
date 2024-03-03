@@ -43,6 +43,7 @@ This project relies on several dependencies and Python libraries for data manipu
 - `xgboost`
 - `requests`
 - `branca`
+- `scipy`
 
 ## Licenses
 
