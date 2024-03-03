@@ -21,10 +21,10 @@ To execute our data analysis, follow these steps:
    ```
    cd <project-directory>
    ```
-3. **Create and Activate the Conda Environment**: Use the `dsci.yml` file to create a Conda environment that includes all necessary dependencies.
+3. **Create and Activate the Conda Environment**: Use the `environment.yml` file to create a Conda environment that includes all necessary dependencies.
    ```
-   conda env create -f dsci.yml
-   conda activate dsci
+   conda env create -f environment.yml
+   conda activate environment
    ```
 4. **Run the Analysis**: Open JupyterLab and run the notebook `milestone_1.ipynb` under the src folder.
 
