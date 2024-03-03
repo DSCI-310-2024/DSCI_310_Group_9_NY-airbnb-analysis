@@ -1,13 +1,13 @@
-# New York Airbnb Analysis
+# Predicting the Price of New York City Airbnbs
 
-## Contributors/Authors
+## Contributors / Authors
 - Riddhi Battu
 - Oliver Gullery
 - Rashi Selarka
 - Prithvi Sureka
 
 ## Project Summary
-At the heart of our exploration lies the vibrant, dynamic world of New York City's Airbnb landscape. Our project dives into the rich dataset detailing Airbnb's listing activity and metrics within NYC for the data from 2011 to December 2023. Through our analysis, we aim to uncover patterns and insights into the hosts' world, geographical distribution of listings, and the underlying factors driving the popularity and pricing strategies across different neighborhoods. This gives us a unique lens to understand the nuances of urban hospitality and its ripple effects on local tourism and community dynamics.
+At the heart of our exploration lies the vibrant, dynamic world of New York City's Airbnb landscape. Our project dives into rich data from [insideairbnb.com](http://insideairbnb.com/get-the-data/) detailing Airbnb's listing activity and review metrics within NYC from 2011 to December 2023. Through our analysis, we aim to uncover patterns and insights into the geographical distribution of listings, the trends in reviews, and the underlying factors driving popularity and pricing across all boroughs of NYC. This investigation can give us a unique lens to understand the nuances of urban hospitality and its ripple effects on local tourism and community dynamics, and specific to NYC, can help us better understand the impact of Local Law 18 on Airbnb prices.
 
 ## How to Run This Analysis
 
@@ -19,43 +19,41 @@ To execute our data analysis, follow these steps:
    ```
 2. **Navigate to Project Directory**: Change your directory to the project folder.
    ```
-   cd [project-directory]
+   cd <project-directory>
    ```
 3. **Create and Activate the Conda Environment**: Use the `dsci.yml` file to create a Conda environment that includes all necessary dependencies.
    ```
    conda env create -f dsci.yml
    conda activate dsci
    ```
-4. **Run the Analysis**: Execute the main analysis script.
-   ```
-   python analysis_script.py
-   ```
-_add or remove steps based on the changes we make in the project._
+4. **Run the Analysis**: Open JupyterLab and run the notebook `milestone_1.ipynb` under the src folder.
 
 ## Dependencies
 
-This project relies on several Python libraries for data manipulation, analysis, and visualization. Ensure you have the following installed:
+This project relies on several dependencies and Python libraries for data manipulation, analysis, and visualization:
+- JupyterLab
 
-- pandas
-- numpy
-- matplotlib
-- seaborn
-- scikit-learn
-
-_add or remove dependencies based on our specific analysis needs._
+- `pandas`
+- `numpy`
+- `seaborn`
+- `matplotlib`
+- `sklearn`
+- `plotly`
+- `folium`
+- `xgboost`
+- `requests`
+- `branca`
 
 ## Licenses
 
-This project is licensed under the following:
-
-- [MIT License](./LICENSE). - contained in `LICENSE.md`
+This project is licensed under the [MIT License](./LICENSE) and the data is licensed under the [Creative Commons Attribution 4.0 International License](./LICENSE).
 
 _Please refer to `LICENSE.md` for detailed licensing information._
 
 ## Dataset Acknowledgement
 
-This project utilizes the "[New York City Airbnb Open Data](http://insideairbnb.com/get-the-data/)" dataset available on Airbnb website. The dataset encompasses a wide array of information pertinent to Airbnb listings in NYC for 2024, including host details, geographical availability, and essential metrics for insightful predictions and analyses. We extend our gratitude to Airbnb for making this dataset publicly available, facilitating a deeper understanding of the short-term rental landscape in New York City.
+This project utilizes New York City Airbnb Open Data from [insideairbnb.com](http://insideairbnb.com/get-the-data/). The dataset encompasses a wide array of information pertinent to Airbnb listings in NYC from 2011 to 2023, including host details, geographic availability, and essential metrics for insightful predictions and analyses. We extend our gratitude to Insideairbnb for making this data publicly available, facilitating a deeper understanding of the short-term rental landscape in New York City.
 
 ## Inspiration for Analysis
 
-Our analysis is driven by the quest to decode the complexities of the Airbnb ecosystem in NYC. We aim to answer pressing questions such as the variance in host activity across different areas, the impact of location and amenities on pricing strategies, and the trends in guest preferences. Through predictive modeling, we aspire to forecast future patterns in listings and pricing, offering valuable insights for hosts, guests, and policymakers alike.
+Our analysis is driven by the quest to decode the complexities of the Airbnb ecosystem in NYC, particularly since the Airbnb ban implemented in late 2023. We aim to answer pressing questions such as the variance in host activity across different areas, the impact of location and amenities on pricing strategies, and the trends in guest preferences. Through predictive modeling, we aspire to forecast future patterns in listings and pricing, offering valuable insights for hosts, guests, and policymakers alike.
