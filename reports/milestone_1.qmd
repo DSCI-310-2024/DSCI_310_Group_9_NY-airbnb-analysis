@@ -1,12 +1,21 @@
 ---
-title: Predicting the Price of New York City Airbnbs
-jupyter: python3
+title: "Predicting the Price of New York City Airbnbs (DSCI 310 Group 9)"
+author: "Oliver Gullery, Prithvi Sureka, Rashi Selarka & Riddhi Battu"
+format:
+    html:
+        toc: true
+        toc-depth: 2
+    pdf:
+        toc: true
+        toc-depth: 2
+        #fig-pos: "H"
+bibliography: references.bib
+execute:
+    echo: false
+    warning: false
+editor: source
+jupyter: dsci
 ---
-
-DSCI 310: Group 9
-
-By Oliver Gullery, Prithvi Sureka, Riddhi Battu, Rashi Selarka
-
 
 ```{python}
 #dependencies
@@ -16,29 +25,22 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+from matplotlib.pyplot import figure
 from sklearn.model_selection import train_test_split
-import plotly.express as px
-import plotly.graph_objects as go
-import folium
-import os
 
 from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.dummy import DummyClassifier
 from sklearn.compose import make_column_transformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.impute import SimpleImputer
 import requests
-from branca.colormap import linear
-from sklearn.linear_model import Ridge
-from sklearn.model_selection import cross_val_score, cross_validate
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report
 from sklearn.preprocessing import OrdinalEncoder
-from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import randint, uniform
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.compose import ColumnTransformer
+from sklearn.neighbors import KNeighborsClassifier
+from IPython.display import Markdown, display
+from tabulate import tabulate
 ```
 
 # Summary
@@ -47,9 +49,9 @@ We are developing a classification model using a KNN machine learning algorithm 
 
 # Introduction
 
-Airbnb has been one of the most popular short-term stays and rental online services since 2008, expanding to over a thousand cities in less than a year (Geron, 2009). Owing to its exponential growth however, many metropolises such as Paris, London, Berlin, and New York City started introducing special rules and laws for creating a listing on Airbnb due to its impact on housing shortages and rental markets (Tun, 2023). In September 2023, New York enforced a measure called Local Law 18 (Oladipo, 2023), that was essentially a de facto ban on short-term rentals that would force the amount of listings to decrease 85% within the month (Chan, 2023), and decrease over 90% as of 2024 from what they were in 2022 (Bellafante, 2024). Consequently, this led average prices to surge, and led us to want to investigate factors of New York Airbnbs and how they impact listing prices.
+Airbnb has been one of the most popular short-term stays and rental online services since 2008, expanding to over a thousand cities in less than a year [@Geron_2009]. Owing to its exponential growth however, many metropolises such as Paris, London, Berlin, and New York City started introducing special rules and laws for creating a listing on Airbnb due to its impact on housing shortages and rental markets [@Tun_2023]. In September 2023, New York enforced a measure called Local Law 18 [@Oladipo_2023], that was essentially a de facto ban on short-term rentals that would force the amount of listings to decrease 85% within the month [@Chan_2023], and decrease over 90% as of 2024 from what they were in 2022 [@Bellafante_2024]. Consequently, this led average prices to surge, and led us to want to investigate factors of New York Airbnbs and how they impact listing prices.
 
-We were able to obtain a workable and descriptive dataset about New York Airbnbs from [insideairbnb.com](http://insideairbnb.com/new-york-city/) (New York City, 2024) that gave insight into every listing from 2011 to 2023 and their reviews. The fields present in our dataset are:
+We were able to obtain a workable and descriptive dataset about New York Airbnbs from [insideairbnb.com](http://insideairbnb.com/new-york-city/) [@New_York_City] that gave insight into every listing from 2011 to 2023 and their reviews. The fields present in our dataset are:
 
 * ID: Unique identifier for listing
 * Name: Name of listing, followed by rating and type (e.g. 1 bed 1 bath)
@@ -68,7 +70,7 @@ We were able to obtain a workable and descriptive dataset about New York Airbnbs
 * Calculated Host Listings Count: Number of listings the corresponding host has
 * Availability 365: Number of days in a year listing is available for booking
 
-Here we intend to use a machine learning algorithm to predict Airbnb prices per night using most of the above factors. There have been multiple studies looking into how the Airbnb ban impacts NYC rental (Fields, 2023) and hotel prices (Kelly, 2023), but not as much into the Airbnb prices themselves. Since our investigation will be solely based on data up until 2023, it can be used glean exactly how these restrictions impacted Airbnb prices in NYC when compared with information from 2024 onwards (i.e. was it because the number of listings per host went down? Or was it because the minimum number of nights required to stay went up? and more questions like that). As Airbnb prices can range to various amounts, we will look to *bin prices into different categories in increments of 50*. This will help us provide a more accurate range of price recommendations when looking at different Airbnb listings
+Here we intend to use a machine learning algorithm to predict Airbnb prices per night using most of the above factors. There have been multiple studies looking into how the Airbnb ban impacts NYC rental [@Fields_2023] and hotel prices [@Kelly_2023], but not as much into the Airbnb prices themselves. Since our investigation will be solely based on data up until 2023, it can be used glean exactly how these restrictions impacted Airbnb prices in NYC when compared with information from 2024 onwards (i.e. was it because the number of listings per host went down? Or was it because the minimum number of nights required to stay went up? and more questions like that). As Airbnb prices can range to various amounts, we will look to *bin prices into different categories in increments of 50*. This will help us provide a more accurate range of price recommendations when looking at different Airbnb listings
 
 # Methods
 
@@ -483,7 +485,7 @@ Here is a method to build our model, we built it for ease of reproducibility whe
 # Feature importance 
 
 ```{python}
-from matplotlib.pyplot import figure 
+
 def build_model(model, preprocessor, X_train, y_train_encoded, X_test, y_test_encoded, clf=False):
     model_pipe = make_pipeline(preprocessor, model)
     model = model_pipe.fit(X_train, y_train_encoded)
@@ -497,7 +499,7 @@ def build_model(model, preprocessor, X_train, y_train_encoded, X_test, y_test_en
 At present, our feature importance metrics may be distorted due to the numerous variables generated through one-hot encoding. For subsequent analyses, we might consider exploring alternative methods to evaluate feature significance, such as aggregating the importance of dummy variables back to the original categorical variables, or employing encoding techniques that preserve more information about the categorical variable's cardinality and inherent ordering. This approach could potentially provide a more accurate reflection of each feature's true contribution to the predictive model.
 
 ```{python}
-from sklearn.neighbors import KNeighborsClassifier
+
 knn = KNeighborsClassifier()
 knn_model, knn_clf_report = build_model(knn, preprocessor, X_train, y_train_encoded, X_test, y_test_encoded, clf=True)
 print(knn_clf_report)

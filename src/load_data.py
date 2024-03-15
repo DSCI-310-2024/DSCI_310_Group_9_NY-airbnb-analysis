@@ -8,8 +8,8 @@ import pandas as pd
 # parse/define command line arguments here
 
 @click.command()
-@click.option('data_url', type=str, help = 'URL to input data')
-@click.option('destination', type=str, help = 'Path (including filename) of where to write the file')
+@click.option('--data_url', type=str, help = 'URL to input data')
+@click.option('--destination', type=str, help = 'Path (including filename) of where to write the file')
 
 # define main function
 
@@ -18,6 +18,7 @@ def main(data_url, destination):
     
     data = pd.read_csv(data_url)
     data.to_csv(destination)
+    click.echo("File Saved!")
 
 # code for other functions & tests goes here
 
