@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.546">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Oliver Gullery, Prithvi, Riddhi Battu, Rashi">
+
+<title>DSCI 310: Airbnb Price Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="eda_files/libs/clipboard/clipboard.min.js"></script>
+<script src="eda_files/libs/quarto-html/quarto.js"></script>
+<script src="eda_files/libs/quarto-html/popper.min.js"></script>
+<script src="eda_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="eda_files/libs/quarto-html/anchor.min.js"></script>
+<link href="eda_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="eda_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="eda_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="eda_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="eda_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#aim" id="toc-aim" class="nav-link active" data-scroll-target="#aim">Aim</a>
+  <ul class="collapse">
+  <li><a href="#export-the-dataset-to-our-dataraw-folder" id="toc-export-the-dataset-to-our-dataraw-folder" class="nav-link" data-scroll-target="#export-the-dataset-to-our-dataraw-folder">Export the dataset to our data/raw folder</a></li>
+  <li><a href="#data-shape-datatypes" id="toc-data-shape-datatypes" class="nav-link" data-scroll-target="#data-shape-datatypes">Data Shape &amp; Datatypes</a></li>
+  <li><a href="#summary-statistics" id="toc-summary-statistics" class="nav-link" data-scroll-target="#summary-statistics">Summary Statistics</a></li>
+  <li><a href="#identifying-null-values-duplicates" id="toc-identifying-null-values-duplicates" class="nav-link" data-scroll-target="#identifying-null-values-duplicates">Identifying Null values &amp; Duplicates</a></li>
+  <li><a href="#correlation-matrix-ranked-with-top-ten-correlations" id="toc-correlation-matrix-ranked-with-top-ten-correlations" class="nav-link" data-scroll-target="#correlation-matrix-ranked-with-top-ten-correlations">Correlation Matrix (Ranked with Top Ten Correlations)</a></li>
+  </ul></li>
+  <li><a href="#takwaways-from-preliminary-eda" id="toc-takwaways-from-preliminary-eda" class="nav-link" data-scroll-target="#takwaways-from-preliminary-eda">Takwaways From Preliminary EDA</a>
+  <ul class="collapse">
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul></li>
+  <li><a href="#prelimenary-feature-engineering" id="toc-prelimenary-feature-engineering" class="nav-link" data-scroll-target="#prelimenary-feature-engineering">Prelimenary Feature Engineering</a>
+  <ul class="collapse">
+  <li><a href="#putting-it-all-together" id="toc-putting-it-all-together" class="nav-link" data-scroll-target="#putting-it-all-together">Putting It All Together</a></li>
+  <li><a href="#splitting-data" id="toc-splitting-data" class="nav-link" data-scroll-target="#splitting-data">Splitting Data</a></li>
+  </ul></li>
+  <li><a href="#exploratory-data-analysis-visualizations" id="toc-exploratory-data-analysis-visualizations" class="nav-link" data-scroll-target="#exploratory-data-analysis-visualizations">Exploratory Data Analysis (Visualizations)</a>
+  <ul class="collapse">
+  <li><a href="#figure-1.-map-with-distribution-of-listings-by-location-and-price" id="toc-figure-1.-map-with-distribution-of-listings-by-location-and-price" class="nav-link" data-scroll-target="#figure-1.-map-with-distribution-of-listings-by-location-and-price">Figure 1. Map with Distribution of Listings by Location and Price</a></li>
+  <li><a href="#figure-2.-price-vs-number-of-reviews-coloured-by-room-type-scatterplot" id="toc-figure-2.-price-vs-number-of-reviews-coloured-by-room-type-scatterplot" class="nav-link" data-scroll-target="#figure-2.-price-vs-number-of-reviews-coloured-by-room-type-scatterplot">Figure 2. Price vs Number of Reviews Coloured by Room Type Scatterplot</a></li>
+  <li><a href="#figure-3.-price-vs-reviews-per-month-coloured-by-room-type-scatterplot" id="toc-figure-3.-price-vs-reviews-per-month-coloured-by-room-type-scatterplot" class="nav-link" data-scroll-target="#figure-3.-price-vs-reviews-per-month-coloured-by-room-type-scatterplot">Figure 3. Price vs Reviews Per Month Coloured by Room Type Scatterplot</a></li>
+  <li><a href="#figure-4.-neighbourhood-group-vs-log-scaled-price-coloured-boxplot" id="toc-figure-4.-neighbourhood-group-vs-log-scaled-price-coloured-boxplot" class="nav-link" data-scroll-target="#figure-4.-neighbourhood-group-vs-log-scaled-price-coloured-boxplot">Figure 4. Neighbourhood Group vs Log Scaled Price Coloured Boxplot</a></li>
+  <li><a href="#figure-5.-room-type-vs-price-box-plot" id="toc-figure-5.-room-type-vs-price-box-plot" class="nav-link" data-scroll-target="#figure-5.-room-type-vs-price-box-plot">Figure 5. Room Type Vs Price Box plot</a></li>
+  </ul></li>
+  <li><a href="#preprocessing-transformations" id="toc-preprocessing-transformations" class="nav-link" data-scroll-target="#preprocessing-transformations">Preprocessing &amp; Transformations</a></li>
+  <li><a href="#preparing-data" id="toc-preparing-data" class="nav-link" data-scroll-target="#preparing-data">Preparing Data</a>
+  <ul class="collapse">
+  <li><a href="#defining-transformations" id="toc-defining-transformations" class="nav-link" data-scroll-target="#defining-transformations">Defining Transformations</a></li>
+  </ul></li>
+  <li><a href="#creating-a-baseline-model" id="toc-creating-a-baseline-model" class="nav-link" data-scroll-target="#creating-a-baseline-model">Creating a Baseline Model</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../../eda.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">DSCI 310: Airbnb Price Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Oliver Gullery, Prithvi, Riddhi Battu, Rashi </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="b11a20e1" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.graph_objects <span class="im">as</span> go</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> folium</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xgboost <span class="im">as</span> xg</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.dummy <span class="im">import</span> DummyClassifier</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeRegressor</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_transformer</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, StandardScaler</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.dummy <span class="im">import</span> DummyRegressor</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> branca.colormap <span class="im">import</span> linear</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="aim" class="level2">
+<h2 class="anchored" data-anchor-id="aim">Aim</h2>
+<p>The aim of this data analysis project is to identify which of the factors in the Airbnb Dataset are strong predictors of price. Doing so will allow us obtain information which can determine if Airbnbs are accurately priced.</p>
+<div id="bdcb61b7" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loading the data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>url_listings <span class="op">=</span> <span class="st">"http://data.insideairbnb.com/united-states/ny/new-york-city/2024-02-06/visualisations/listings.csv"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(url_listings)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">host_id</th>
+<th data-quarto-table-cell-role="th">host_name</th>
+<th data-quarto-table-cell-role="th">neighbourhood_group</th>
+<th data-quarto-table-cell-role="th">neighbourhood</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">room_type</th>
+<th data-quarto-table-cell-role="th">price</th>
+<th data-quarto-table-cell-role="th">minimum_nights</th>
+<th data-quarto-table-cell-role="th">number_of_reviews</th>
+<th data-quarto-table-cell-role="th">last_review</th>
+<th data-quarto-table-cell-role="th">reviews_per_month</th>
+<th data-quarto-table-cell-role="th">calculated_host_listings_count</th>
+<th data-quarto-table-cell-role="th">availability_365</th>
+<th data-quarto-table-cell-role="th">number_of_reviews_ltm</th>
+<th data-quarto-table-cell-role="th">license</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>977395984065981849</td>
+<td>Home in Brooklyn · 1 bedroom · 1 bed · 1 bath</td>
+<td>95344065</td>
+<td>Derek</td>
+<td>Brooklyn</td>
+<td>Sheepshead Bay</td>
+<td>40.591790</td>
+<td>-73.942850</td>
+<td>Private room</td>
+<td>30.0</td>
+<td>31</td>
+<td>1</td>
+<td>2024-01-03</td>
+<td>0.86</td>
+<td>7</td>
+<td>339</td>
+<td>1</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>729947657876634696</td>
+<td>Rental unit in The Bronx · 1 bedroom · 1 bed ·...</td>
+<td>566660</td>
+<td>Markus</td>
+<td>Bronx</td>
+<td>Longwood</td>
+<td>40.827373</td>
+<td>-73.903147</td>
+<td>Private room</td>
+<td>29.0</td>
+<td>30</td>
+<td>2</td>
+<td>2023-12-31</td>
+<td>0.14</td>
+<td>2</td>
+<td>34</td>
+<td>1</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>648033676238017128</td>
+<td>Rental unit in Bronx · ★4.89 · 1 bedroom · 1 b...</td>
+<td>421601513</td>
+<td>J Carlos Retals</td>
+<td>Bronx</td>
+<td>Kingsbridge</td>
+<td>40.863940</td>
+<td>-73.903120</td>
+<td>Private room</td>
+<td>30.0</td>
+<td>30</td>
+<td>18</td>
+<td>2023-12-26</td>
+<td>0.95</td>
+<td>3</td>
+<td>359</td>
+<td>6</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="export-the-dataset-to-our-dataraw-folder" class="level3">
+<h3 class="anchored" data-anchor-id="export-the-dataset-to-our-dataraw-folder">Export the dataset to our data/raw folder</h3>
+<div id="2741c59d" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data.to_csv(<span class="st">"../data/raw/airbnb_data_2024"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-shape-datatypes" class="level3">
+<h3 class="anchored" data-anchor-id="data-shape-datatypes">Data Shape &amp; Datatypes</h3>
+<div id="9e8c7344" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Data Shape: </span><span class="sc">{</span>data<span class="sc">.</span>shape<span class="sc">}</span><span class="ch">\n</span><span class="ss">'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Data datatypes: </span><span class="ch">\n</span><span class="sc">{</span>data<span class="sc">.</span>dtypes<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data Shape: (39202, 18)
+
+Data datatypes: 
+id                                  int64
+name                               object
+host_id                             int64
+host_name                          object
+neighbourhood_group                object
+neighbourhood                      object
+latitude                          float64
+longitude                         float64
+room_type                          object
+price                             float64
+minimum_nights                      int64
+number_of_reviews                   int64
+last_review                        object
+reviews_per_month                 float64
+calculated_host_listings_count      int64
+availability_365                    int64
+number_of_reviews_ltm               int64
+license                            object
+dtype: object</code></pre>
+</div>
+</div>
+</section>
+<section id="summary-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="summary-statistics">Summary Statistics</h3>
+<div id="50ffcb02" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data.info()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>data.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 39202 entries, 0 to 39201
+Data columns (total 18 columns):
+ #   Column                          Non-Null Count  Dtype  
+---  ------                          --------------  -----  
+ 0   id                              39202 non-null  int64  
+ 1   name                            39202 non-null  object 
+ 2   host_id                         39202 non-null  int64  
+ 3   host_name                       39197 non-null  object 
+ 4   neighbourhood_group             39202 non-null  object 
+ 5   neighbourhood                   39202 non-null  object 
+ 6   latitude                        39202 non-null  float64
+ 7   longitude                       39202 non-null  float64
+ 8   room_type                       39202 non-null  object 
+ 9   price                           24267 non-null  float64
+ 10  minimum_nights                  39202 non-null  int64  
+ 11  number_of_reviews               39202 non-null  int64  
+ 12  last_review                     27702 non-null  object 
+ 13  reviews_per_month               27702 non-null  float64
+ 14  calculated_host_listings_count  39202 non-null  int64  
+ 15  availability_365                39202 non-null  int64  
+ 16  number_of_reviews_ltm           39202 non-null  int64  
+ 17  license                         4805 non-null   object 
+dtypes: float64(4), int64(7), object(7)
+memory usage: 5.4+ MB</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">host_id</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">price</th>
+<th data-quarto-table-cell-role="th">minimum_nights</th>
+<th data-quarto-table-cell-role="th">number_of_reviews</th>
+<th data-quarto-table-cell-role="th">reviews_per_month</th>
+<th data-quarto-table-cell-role="th">calculated_host_listings_count</th>
+<th data-quarto-table-cell-role="th">availability_365</th>
+<th data-quarto-table-cell-role="th">number_of_reviews_ltm</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>3.920200e+04</td>
+<td>3.920200e+04</td>
+<td>39202.000000</td>
+<td>39202.000000</td>
+<td>24267.000000</td>
+<td>39202.000000</td>
+<td>39202.000000</td>
+<td>27702.000000</td>
+<td>39202.000000</td>
+<td>39202.000000</td>
+<td>39202.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>3.241181e+17</td>
+<td>1.611708e+08</td>
+<td>40.729073</td>
+<td>-73.946289</td>
+<td>206.502946</td>
+<td>29.634432</td>
+<td>25.172440</td>
+<td>0.953946</td>
+<td>46.842661</td>
+<td>151.142008</td>
+<td>5.636575</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>4.185256e+17</td>
+<td>1.739680e+08</td>
+<td>0.056339</td>
+<td>0.054813</td>
+<td>1004.705385</td>
+<td>30.172981</td>
+<td>58.097482</td>
+<td>1.633604</td>
+<td>146.693303</td>
+<td>145.985782</td>
+<td>16.510633</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>2.595000e+03</td>
+<td>1.678000e+03</td>
+<td>40.500314</td>
+<td>-74.251907</td>
+<td>10.000000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>0.010000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>2.021553e+07</td>
+<td>1.671337e+07</td>
+<td>40.688770</td>
+<td>-73.982870</td>
+<td>80.000000</td>
+<td>30.000000</td>
+<td>0.000000</td>
+<td>0.100000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>4.683017e+07</td>
+<td>7.964657e+07</td>
+<td>40.726230</td>
+<td>-73.954241</td>
+<td>129.000000</td>
+<td>30.000000</td>
+<td>4.000000</td>
+<td>0.360000</td>
+<td>1.000000</td>
+<td>110.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>7.746345e+17</td>
+<td>2.881116e+08</td>
+<td>40.762500</td>
+<td>-73.926990</td>
+<td>212.000000</td>
+<td>30.000000</td>
+<td>22.000000</td>
+<td>1.300000</td>
+<td>6.000000</td>
+<td>304.000000</td>
+<td>4.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>1.084860e+18</td>
+<td>5.597047e+08</td>
+<td>40.911380</td>
+<td>-73.713650</td>
+<td>100000.000000</td>
+<td>1250.000000</td>
+<td>1887.000000</td>
+<td>78.250000</td>
+<td>827.000000</td>
+<td>365.000000</td>
+<td>1163.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="identifying-null-values-duplicates" class="level3">
+<h3 class="anchored" data-anchor-id="identifying-null-values-duplicates">Identifying Null values &amp; Duplicates</h3>
+<div id="26255480" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Null Values: </span><span class="sc">{</span>data<span class="sc">.</span>isna()<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ch">\n</span><span class="ss">'</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Duplicated Values: </span><span class="sc">{</span>data<span class="sc">.</span>duplicated()<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Null Values: id                                    0
+name                                  0
+host_id                               0
+host_name                             5
+neighbourhood_group                   0
+neighbourhood                         0
+latitude                              0
+longitude                             0
+room_type                             0
+price                             14935
+minimum_nights                        0
+number_of_reviews                     0
+last_review                       11500
+reviews_per_month                 11500
+calculated_host_listings_count        0
+availability_365                      0
+number_of_reviews_ltm                 0
+license                           34397
+dtype: int64
+
+Duplicated Values: 0</code></pre>
+</div>
+</div>
+</section>
+<section id="correlation-matrix-ranked-with-top-ten-correlations" class="level3">
+<h3 class="anchored" data-anchor-id="correlation-matrix-ranked-with-top-ten-correlations">Correlation Matrix (Ranked with Top Ten Correlations)</h3>
+<div id="0d983cde" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># creating correlation matrix</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="op">=</span> data.select_dtypes(<span class="st">'int64'</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rank_correlations(corr_matrix):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># flattening matrix</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    flattened_matrix <span class="op">=</span> corr_matrix.stack().reset_index()</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">#renaming columns</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    flattened_matrix.columns <span class="op">=</span> [<span class="st">'Variable_1'</span>, <span class="st">'Variable_2'</span>, <span class="st">'Correlation'</span>]</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># removing duplicate variable names</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    flattened_matrix <span class="op">=</span> flattened_matrix.loc[flattened_matrix[<span class="st">'Variable_1'</span>] <span class="op">!=</span> flattened_matrix[<span class="st">'Variable_2'</span>]]</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    corr_column <span class="op">=</span> flattened_matrix[<span class="st">'Correlation'</span>]</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    flattened_matrix <span class="op">=</span> flattened_matrix.iloc[<span class="bu">abs</span>(corr_column).argsort()[::<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    flattened_matrix <span class="op">=</span> flattened_matrix.loc[flattened_matrix[<span class="st">'Correlation'</span>].duplicated()]</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'Top 10 Variable Correlations: </span><span class="ch">\n</span><span class="sc">{</span>flattened_matrix<span class="sc">.</span>head(<span class="dv">10</span>)<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>rank_correlations(corr_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Top 10 Variable Correlations: 
+        Variable_1 Variable_2  Correlation
+219577       31368    host_id    558734210
+40447         5778    host_id    558734210
+213725       30532    host_id    558446111
+35365         5052    host_id    558446111
+32810         4687    host_id    558446111
+7218          1031    host_id    558446111
+179859       25694    host_id    558446111
+213221       30460    host_id    558446111
+89811        12830    host_id    558240264
+106975       15282    host_id    558240264</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="takwaways-from-preliminary-eda" class="level2">
+<h2 class="anchored" data-anchor-id="takwaways-from-preliminary-eda">Takwaways From Preliminary EDA</h2>
+<ul>
+<li>Our shape function tells us we have 48895 rows and 16 features which includes our target variable <code>price</code>.</li>
+</ul>
+<p>-Looking at the columns from our info() function we can identify that name is a text data which could provide some valuable insights. We can also infer that any id information (<code>id</code> and <code>host_id</code>) and variables such as <code>host_name</code> will not provide any key information, thus, we can drop them for our data analysis.</p>
+<ul>
+<li><p>The describe() function provided key summary statistics for our numerical columns which included the following metrics: count, mean, standard deviation, minimum, and maximum. This helps us obtain an idea as to the spread of our data. Our info() function gave us further information about the datatypes, columns, and amount of data we have. Through this analysis in addition to our dtypes() function we can identify that last_reviw is an object dtype but could be converted into a pandas datatime format to further utilize pandas datatime capabilities. Examples of such would be splitting the data into year, month and day to identify if there are any temporal patterns across months of years.</p></li>
+<li><p>Our isna() function informed us of the null values which are included in the dataset. The columns <code>name</code> and <code>host_name</code> have 16 and 21 null values respectively, we can address this null values by imputing a blank string to indicate the information is not provided. Our <code>reviews_per_month</code> column and <code>last_review</code> column have 10052. As these have identical amounts of null values, we can assume that if a Airbnb listing doesn’t have a review, instead zero the dataset put a null values. This can be addressed through imputing zero into the null vaues in the reviews_per_month column.</p></li>
+</ul>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<p>In order to prepare our data for further analysis we must perform some preliminary feature engineering which will involve: - Convert <code>id</code> and <code>host_id</code> into object datatypes to prepare them to be dropped. - Converting the data type of the <code>last_review</code> column. - Then split the <code>last_review</code> into year, month and day. - Imputing zeros into the <code>reviews_per_month</code> null values - Imputing an empty string into the null values for <code>name</code> and `host_name</p>
+<p>After these changes are made we can proceed to split our data into a train and test set and label our data by data type (numeric, categorical, text, and drop columns). ### Preliminary Feature Engineering In order to prepare our data, for further analysis we must perform some preliminary feature engineering which will involve:</p>
+<ol type="1">
+<li><strong>Convert <code>id</code> and <code>host_id</code> into object datatypes to prepare them to be dropped.</strong></li>
+</ol>
+<div id="807370e6" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'id'</span>] <span class="op">=</span> <span class="bu">str</span>(data[<span class="st">'id'</span>])</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'host_id'</span>] <span class="op">=</span> <span class="bu">str</span>(data[<span class="st">'host_id'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li><strong>Convert the data type of the <code>last_review</code> column to datetime.</strong></li>
+</ol>
+<div id="8da95dfd" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'last_review'</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">'last_review'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li><strong>Split the <code>last_review</code> column into year, month, and day columns.</strong></li>
+</ol>
+<div id="9989f73c" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'year'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.year</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'month'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.month</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'day'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.day</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li><strong>Impute zeros into the <code>reviews_per_month</code> column for null values.</strong></li>
+</ol>
+<div id="cf795533" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'reviews_per_month'</span>] <span class="op">=</span> data[<span class="st">'reviews_per_month'</span>].fillna(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="5" type="1">
+<li><strong>Impute an empty string into the <code>name</code> and <code>host_name</code> columns for null values.</strong></li>
+</ol>
+<div id="da1b0725" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'name'</span>] <span class="op">=</span> data[<span class="st">'name'</span>].fillna(<span class="st">''</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'host_name'</span>] <span class="op">=</span> data[<span class="st">'host_name'</span>].fillna(<span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After these changes are made we can proceed to split our data and perform further analysis.</p>
+</section>
+</section>
+<section id="prelimenary-feature-engineering" class="level2">
+<h2 class="anchored" data-anchor-id="prelimenary-feature-engineering">Prelimenary Feature Engineering</h2>
+<p>For the preliminary feature engineering, we will perform the steps above:</p>
+<section id="putting-it-all-together" class="level3">
+<h3 class="anchored" data-anchor-id="putting-it-all-together">Putting It All Together</h3>
+<p>Now, let’s put all these steps together to perform your preliminary feature engineering tasks.</p>
+<div id="e3283326" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert last_review to datetime</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'last_review'</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">'last_review'</span>])</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract year, month, and day from last_review</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'year'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.year</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'month'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.month</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'day'</span>] <span class="op">=</span> data[<span class="st">'last_review'</span>].dt.day</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Impute zeros for reviews_per_month null values</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'reviews_per_month'</span>] <span class="op">=</span> data[<span class="st">'reviews_per_month'</span>].fillna(<span class="dv">0</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Impute empty string for name and host_name null values</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'name'</span>] <span class="op">=</span> data[<span class="st">'name'</span>].fillna(<span class="st">''</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'host_name'</span>] <span class="op">=</span> data[<span class="st">'host_name'</span>].fillna(<span class="st">''</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>data.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">host_id</th>
+<th data-quarto-table-cell-role="th">host_name</th>
+<th data-quarto-table-cell-role="th">neighbourhood_group</th>
+<th data-quarto-table-cell-role="th">neighbourhood</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">room_type</th>
+<th data-quarto-table-cell-role="th">price</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">number_of_reviews</th>
+<th data-quarto-table-cell-role="th">last_review</th>
+<th data-quarto-table-cell-role="th">reviews_per_month</th>
+<th data-quarto-table-cell-role="th">calculated_host_listings_count</th>
+<th data-quarto-table-cell-role="th">availability_365</th>
+<th data-quarto-table-cell-role="th">number_of_reviews_ltm</th>
+<th data-quarto-table-cell-role="th">license</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">month</th>
+<th data-quarto-table-cell-role="th">day</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0 977395984065981849\n1 72994765...</td>
+<td>Home in Brooklyn · 1 bedroom · 1 bed · 1 bath</td>
+<td>0 95344065\n1 566660\n2 ...</td>
+<td>Derek</td>
+<td>Brooklyn</td>
+<td>Sheepshead Bay</td>
+<td>40.591790</td>
+<td>-73.942850</td>
+<td>Private room</td>
+<td>30.0</td>
+<td>...</td>
+<td>1</td>
+<td>2024-01-03</td>
+<td>0.86</td>
+<td>7</td>
+<td>339</td>
+<td>1</td>
+<td>NaN</td>
+<td>2024.0</td>
+<td>1.0</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0 977395984065981849\n1 72994765...</td>
+<td>Rental unit in The Bronx · 1 bedroom · 1 bed ·...</td>
+<td>0 95344065\n1 566660\n2 ...</td>
+<td>Markus</td>
+<td>Bronx</td>
+<td>Longwood</td>
+<td>40.827373</td>
+<td>-73.903147</td>
+<td>Private room</td>
+<td>29.0</td>
+<td>...</td>
+<td>2</td>
+<td>2023-12-31</td>
+<td>0.14</td>
+<td>2</td>
+<td>34</td>
+<td>1</td>
+<td>NaN</td>
+<td>2023.0</td>
+<td>12.0</td>
+<td>31.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0 977395984065981849\n1 72994765...</td>
+<td>Rental unit in Bronx · ★4.89 · 1 bedroom · 1 b...</td>
+<td>0 95344065\n1 566660\n2 ...</td>
+<td>J Carlos Retals</td>
+<td>Bronx</td>
+<td>Kingsbridge</td>
+<td>40.863940</td>
+<td>-73.903120</td>
+<td>Private room</td>
+<td>30.0</td>
+<td>...</td>
+<td>18</td>
+<td>2023-12-26</td>
+<td>0.95</td>
+<td>3</td>
+<td>359</td>
+<td>6</td>
+<td>NaN</td>
+<td>2023.0</td>
+<td>12.0</td>
+<td>26.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>3 rows × 21 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="splitting-data" class="level3">
+<h3 class="anchored" data-anchor-id="splitting-data">Splitting Data</h3>
+<div id="ef33a162" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>train_df, test_df <span class="op">=</span> train_test_split(data, test_size<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># numeric data</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>numerical_data <span class="op">=</span> data.select_dtypes(include<span class="op">=</span>[<span class="st">"int64"</span>, <span class="st">"float64"</span>])</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>numerical_data <span class="op">=</span> numerical_data.columns</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># text data</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>text_data <span class="op">=</span> [<span class="st">"name"</span>]</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># drop data</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>drop_data <span class="op">=</span> [<span class="st">"host_name"</span>, <span class="st">"host_id"</span>, <span class="st">"id"</span>]</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Categorical Data</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>categorical_data <span class="op">=</span> data.select_dtypes(include<span class="op">=</span>[<span class="st">"object"</span>])</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>categorical_data <span class="op">=</span> categorical_data.columns</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>columns_to_exclude <span class="op">=</span> text_data <span class="op">+</span> drop_data</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>categorical_data <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> categorical_data <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> columns_to_exclude]</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Train Shape: </span><span class="sc">{</span>train_df<span class="sc">.</span>shape<span class="sc">}</span><span class="ch">\n</span><span class="ss">Test Shape: </span><span class="sc">{</span>test_df<span class="sc">.</span>shape<span class="sc">}</span><span class="ch">\n</span><span class="ss">'</span>)</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Numerical Columns: </span><span class="sc">{</span>numerical_data<span class="sc">}</span><span class="ss">/n"</span>)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Categorical Columns: </span><span class="sc">{</span>categorical_data<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Text Data: </span><span class="sc">{</span>text_data<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Drop Columns: </span><span class="sc">{</span>drop_data<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Train Shape: (31361, 21)
+Test Shape: (7841, 21)
+
+Numerical Columns: Index(['latitude', 'longitude', 'price', 'minimum_nights', 'number_of_reviews',
+       'reviews_per_month', 'calculated_host_listings_count',
+       'availability_365', 'number_of_reviews_ltm', 'year', 'month', 'day'],
+      dtype='object')/n
+Categorical Columns: ['neighbourhood_group', 'neighbourhood', 'room_type', 'license']
+
+Text Data: ['name']
+
+Drop Columns: ['host_name', 'host_id', 'id']
+</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="exploratory-data-analysis-visualizations" class="level1">
+<h1>Exploratory Data Analysis (Visualizations)</h1>
+<section id="figure-1.-map-with-distribution-of-listings-by-location-and-price" class="level3">
+<h3 class="anchored" data-anchor-id="figure-1.-map-with-distribution-of-listings-by-location-and-price">Figure 1. Map with Distribution of Listings by Location and Price</h3>
+<div id="d8576238" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting color limits to more typical range, e.g., 0 to 400</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust these values based on your specific dataset and its distribution</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>vmin, vmax <span class="op">=</span> <span class="dv">0</span>, <span class="dv">400</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> plt.scatter(train_df[<span class="st">'longitude'</span>], train_df[<span class="st">'latitude'</span>], c<span class="op">=</span>train_df[<span class="st">'price'</span>], cmap<span class="op">=</span><span class="st">'viridis'</span>, s<span class="op">=</span><span class="dv">10</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, vmin<span class="op">=</span>vmin, vmax<span class="op">=</span>vmax)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>plt.colorbar(sc, label<span class="op">=</span><span class="st">'Price'</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Longitude'</span>)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Latitude'</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribution of Listings by Location and Price'</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, which<span class="op">=</span><span class="st">'both'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-16-output-1.png" width="792" height="671" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;Figure size 960x768 with 0 Axes&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="figure-2.-price-vs-number-of-reviews-coloured-by-room-type-scatterplot" class="level3">
+<h3 class="anchored" data-anchor-id="figure-2.-price-vs-number-of-reviews-coloured-by-room-type-scatterplot">Figure 2. Price vs Number of Reviews Coloured by Room Type Scatterplot</h3>
+<div id="9420b294" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(train_df, x <span class="op">=</span> <span class="st">'price'</span>, y<span class="op">=</span><span class="st">'number_of_reviews'</span>, hue<span class="op">=</span><span class="st">'room_type'</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Price vs Number of Reviews Coloured by Room Type"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Price"</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"# of Reviews"</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-17-output-1.png" width="603" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="figure-3.-price-vs-reviews-per-month-coloured-by-room-type-scatterplot" class="level3">
+<h3 class="anchored" data-anchor-id="figure-3.-price-vs-reviews-per-month-coloured-by-room-type-scatterplot">Figure 3. Price vs Reviews Per Month Coloured by Room Type Scatterplot</h3>
+<div id="704605ef" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(train_df, x <span class="op">=</span> <span class="st">'price'</span>, y<span class="op">=</span><span class="st">'reviews_per_month'</span>, hue<span class="op">=</span><span class="st">'room_type'</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Price vs Reviews Per Month Coloured by Room Type"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Price"</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"# of Reviews per Month"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-18-output-1.png" width="586" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="figure-4.-neighbourhood-group-vs-log-scaled-price-coloured-boxplot" class="level3">
+<h3 class="anchored" data-anchor-id="figure-4.-neighbourhood-group-vs-log-scaled-price-coloured-boxplot">Figure 4. Neighbourhood Group vs Log Scaled Price Coloured Boxplot</h3>
+<div id="b50a3e98" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>log_price <span class="op">=</span> np.log(train_df[<span class="st">'price'</span>])</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>sns.boxplot(data<span class="op">=</span>train_df, x<span class="op">=</span>log_price, y<span class="op">=</span><span class="st">'neighbourhood_group'</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Boxplot of Neighbourhood Group vs Log Price"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-19-output-1.png" width="655" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="figure-5.-room-type-vs-price-box-plot" class="level3">
+<h3 class="anchored" data-anchor-id="figure-5.-room-type-vs-price-box-plot">Figure 5. Room Type Vs Price Box plot</h3>
+<ul>
+<li>This visualiation was created to see if there is any relationship between room type and price.</li>
+<li>As we can see price differs among the different room types indicating that room type may be able to account for the variation in price.</li>
+</ul>
+<div id="62f8d365" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sns.boxplot(data<span class="op">=</span>train_df, x<span class="op">=</span><span class="st">'price'</span>, y<span class="op">=</span><span class="st">'room_type'</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Boxplot of Price against Room Type"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-20-output-1.png" width="677" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="preprocessing-transformations" class="level1">
+<h1>Preprocessing &amp; Transformations</h1>
+</section>
+<section id="preparing-data" class="level1">
+<h1>Preparing Data</h1>
+<p>Splitting Data into train and test set and performing imputation on missing values</p>
+<div id="af9443b4" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data[<span class="st">'price'</span>]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> data.drop(<span class="st">'price'</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">123</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> impute_random(df, column_name):</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    probs <span class="op">=</span> df[column_name].value_counts(normalize<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    missing <span class="op">=</span> df[column_name].isna()</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    imputed_data <span class="op">=</span> np.random.choice(probs.index, size<span class="op">=</span>missing.<span class="bu">sum</span>(), p<span class="op">=</span>probs.values)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    df.loc[missing, column_name] <span class="op">=</span> imputed_data  <span class="co"># Corrected variable name here</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>numerical_data <span class="op">=</span> numerical_data.tolist()  <span class="co"># Convert to list if it's not already</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if 'last_review' exists in numerical_data before removing</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'last_review'</span> <span class="kw">in</span> numerical_data:</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    numerical_data.remove(<span class="st">'last_review'</span>)</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>date_data <span class="op">=</span> [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'day'</span>]</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Performing imputation on the null values in our date info</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> date_data:  <span class="co"># Corrected the loop variable name</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    X_train <span class="op">=</span> impute_random(X_train, i)  <span class="co"># Ensure correct function call</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    X_test <span class="op">=</span> impute_random(X_test, i)  <span class="co"># Corrected the function name and the argument</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="defining-transformations" class="level2">
+<h2 class="anchored" data-anchor-id="defining-transformations">Defining Transformations</h2>
+<div id="61589b29" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Numerical Transformer</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>numerical_transformer <span class="op">=</span> StandardScaler()</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Categorical Transformer</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>categorical_transformer <span class="op">=</span> OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">'ignore'</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Text Data Transformer</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>text_transformer <span class="op">=</span> CountVectorizer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="81b39358" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> make_column_transformer(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'drop'</span>, drop_data),</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    (numerical_transformer, numerical_data),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    (categorical_transformer, categorical_data),</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    (text_transformer, text_data),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    remainder<span class="op">=</span><span class="st">'passthrough'</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="creating-a-baseline-model" class="level1">
+<h1>Creating a Baseline Model</h1>
+<div id="7814756a" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>reg <span class="op">=</span> DummyRegressor()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="2563f4e9" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pipe = make_pipeline(preprocessor, reg)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pipe.fit(X_train, y_train)</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pipe.predict(y_train)</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># f'Test Score is: {pipe.score(X_train, y_train)}'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

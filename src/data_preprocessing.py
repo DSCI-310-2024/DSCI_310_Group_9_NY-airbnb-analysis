@@ -35,25 +35,6 @@ def main(input_path, out_dir):
     data['host_id'] = str(data['host_id'])
     data['reviews_per_month'] = data['reviews_per_month'].fillna(0)
     
-    # target column
-    target_data = ['price']
-
-    # numeric data
-    numerical_data = data.select_dtypes(include=["int64", "float64"]).drop(target_data, axis=1)
-    numerical_data = numerical_data.columns
-
-    # text data
-    text_data = ["name"]
-
-    # drop data
-    drop_data = ["host_name", "host_id", "id", "license", "last_review"]
-
-    # Categorical Data
-    categorical_data = data.select_dtypes(include=["object"])
-    categorical_data = categorical_data.columns
-    columns_to_exclude = text_data + drop_data
-    categorical_data = [col for col in categorical_data if col not in columns_to_exclude]
-    
     train_df, test_df = train_test_split(data, test_size=0.2, shuffle=True)
     
     train_df['price_category'] = pd.cut(

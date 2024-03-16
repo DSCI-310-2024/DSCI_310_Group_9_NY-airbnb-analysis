@@ -15,6 +15,20 @@ def create_dir_if_not_exists(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+# Function to rank top 10 correlations
+def rank_correlations(corr_matrix):
+    # flattening matrix
+    flattened_matrix = corr_matrix.stack().reset_index()
+    #renaming columns
+    flattened_matrix.columns = ['Variable_1', 'Variable_2', 'Correlation']
+    # removing duplicate variable names
+    flattened_matrix = flattened_matrix.loc[flattened_matrix['Variable_1'] != flattened_matrix['Variable_2']]
+    corr_column = flattened_matrix['Correlation']
+    flattened_matrix = flattened_matrix.iloc[abs(corr_column).argsort()[::-1]]
+    flattened_matrix = flattened_matrix.loc[flattened_matrix['Correlation'].duplicated()]
+    #print(f'Top 10 Variable Correlations: \n{flattened_matrix.head(10)}')
+    return flattened_matrix.head(10)
+
 # parse/define command line arguments here
 
 @click.command()
@@ -22,10 +36,10 @@ def create_dir_if_not_exists(directory):
               default="data/cleaned/train_df.csv",
               help = 'Path to input data')
 @click.option('--viz_out_dir', type=str,
-              default="src/figures",
+              default="results/figures",
               help = 'Path to write the visualizations')
 @click.option('--tbl_out_dir', type=str,
-              default="src/tables",
+              default="results/tables",
               help = 'Path to write the tables')
 
 # define main function
@@ -167,6 +181,11 @@ def main(input_file, viz_out_dir, tbl_out_dir):
     fig7.tight_layout
 
     fig7.savefig(os.path.join(viz_out_dir, 'price_histogram.jpg'))
+    
+    # Table 1: Correlations Ranked
+
+    table1 = rank_correlations(corr_matrix)
+    table1.to_csv(os.path.join(tbl_out_dir, 'correlations_ranked.csv'), index=False)
 
     click.echo("Files Saved!")
 
