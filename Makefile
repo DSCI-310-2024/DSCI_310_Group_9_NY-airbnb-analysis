@@ -48,29 +48,32 @@ results/tables/dummy_classification_report.csv results/tables/knn_classification
 	--tbl_out_dir="results/tables"
 
 # render to html
-reports/milestone_2.html: results reports/milestone_2.qmd
-    quarto render reports/milestone_2.qmd --to html
+reports/milestone_2.html: results/milestone_2.qmd
+	quarto render reports/milestone_2.qmd --to html
 
 # render to pdf
-reports/milestone_2.pdf: results reports/milestone_2.qmd
-    quarto render reports/milestone_2.qmd --to pdf
+reports/milestone_2.pdf: results/milestone_2.qmd
+	quarto render reports/milestone_2.qmd --to pdf
 
 #remove all targeted files using 'make clean'
 clean:
-    rm -rf data/airbnb_data_2023.csv \
-    rm -rf data/cleaned/X_train.csv \
-        data/cleaned/X_test.csv \
-        data/cleaned/y_train.csv \
-        data/cleaned/y_test.csv \
-        data/cleaned/test_df.csv \
-        data/cleaned/train_df.csv
-    rm -rf results/figures/corr_heat_map.jpg \
-        results/figures/listing_locations.jpg \
-        results/figures/price_vs_reviews.jpg \
-        results/figures/price_vs_reviews_per_month.jpg \
-        results/figures/neighbourhood_groups_boxplots.jpg \
-        results/figures/room_type_boxplots.jpg \
-        results/figures/price_histogram.jpg \
-        results/tables/correlations_ranked.csv \
-    rm -rf reports/milestone_2.html \
-        reports/milestone_2.pdf
+	rm -rf data/airbnb_data_2023.csv \
+	data/cleaned/X_train.csv \
+	data/cleaned/X_test.csv \
+	data/cleaned/y_train.csv \
+	data/cleaned/y_test.csv \
+	data/cleaned/test_df.csv \
+	data/cleaned/train_df.csv \
+	results/figures/corr_heat_map.jpg \
+	results/figures/listing_locations.jpg \
+	results/figures/price_vs_reviews.jpg \
+	results/figures/price_vs_reviews_per_month.jpg \
+	results/figures/neighbourhood_groups_boxplots.jpg \
+	results/figures/room_type_boxplots.jpg \
+	results/figures/price_histogram.jpg \
+	results/tables/correlations_ranked.csv \
+	results/tables/dummy_classification_report.csv \
+	results/tables/knn_classification_report.csv \
+	results/tables/hyperparam_classification_report.csv \
+	reports/milestone_2.html \
+	reports/milestone_2.pdf
