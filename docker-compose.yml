@@ -6,3 +6,7 @@ services:
       - "8888:8888"
     volumes:
       - .:/home/jovyan/work
+    deploy:
+      resources:
+        limits:
+          memory: 16G

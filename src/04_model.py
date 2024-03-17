@@ -21,7 +21,7 @@ warnings.filterwarnings("ignore")
 # Function to create the directory if it doesn't exist
 def create_dir_if_not_exists(directory):
     if not os.path.exists(directory):
-        os.makedirs(directory)
+        os.makedirs(directory, exist_ok=True)
 
 # parse/define command line arguments here
 

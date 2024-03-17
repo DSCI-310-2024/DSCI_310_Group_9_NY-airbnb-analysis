@@ -13,7 +13,7 @@ import os
 # Function to create the directory if it doesn't exist
 def create_dir_if_not_exists(directory):
     if not os.path.exists(directory):
-        os.makedirs(directory)
+        os.makedirs(directory, exist_ok=True)
 
 # Function to rank top 10 correlations
 def rank_correlations(corr_matrix):
