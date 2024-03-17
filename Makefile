@@ -67,6 +67,4 @@ clean:
 	results/tables/correlations_ranked.csv \
 	results/tables/dummy_classification_report.csv \
 	results/tables/knn_classification_report.csv \
-	results/tables/hyperparam_classification_report.csv \
-	reports/milestone_2.html \
-	reports/milestone_2.pdf
+	results/tables/hyperparam_classification_report.csv

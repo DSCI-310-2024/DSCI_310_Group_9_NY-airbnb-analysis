@@ -19,5 +19,7 @@ RUN conda install -y \
     pytest=8.1.1 \
     vl-convert-python=1.3.0 \
     tabulate=0.9.0 \
-    click=8.1.7 && \
-    quarto=1.4.550 
+    click=8.1.7 \
+    make=4.3 \
+    jupyter \
+    quarto=1.4.550

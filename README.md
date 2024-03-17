@@ -32,19 +32,7 @@ To execute our data analysis in a containerized environment, follow these steps:
    docker-compose run --rm analysis-env make all
    ```
 
-**If you run into a memory error while executing the script `04_model.py`, follow the instructions below:**
-
-## Increasing Docker Container Memory Limit
-
-Since the analysis performed by this project is resource-intensive, it may require more memory than the default Docker container settings allow. To ensure the analysis runs smoothly, we recommend manually increasing the memory allocated to Docker containers on your system. Follow these steps to adjust the memory settings:
-
-1. Open *Docker Desktop* on your machine.
-2. Click on the *Settings* gear icon in the top right corner.
-3. Navigate to *Resources* > *Memory*.
-4. Use the slider or enter a specific value to set the memory limit. For this analysis, we recommend setting it to *16 GB*.
-5. Click *Apply & Restart* to apply the changes. Docker Desktop will restart with the new memory allocation.
-
-Please note that increasing Docker's memory allocation may affect your system's overall performance. Adjust the settings based on your system capabilities and requirements.
+The rendered pdf and html reports can be found under `reports/milestone_2.pdf` and `reports/milestone_2.html`.
 
 ## Dependencies
 
@@ -52,19 +40,18 @@ This project relies on several dependencies within the Docker container for data
 - JupyterLab
 - `pandas`
 - `numpy`
+- `os`
+- `click`
 - `seaborn`
 - `matplotlib`
 - `scikit-learn`
-- `plotly`
-- `folium`
-- `requests`
 - `scipy`
 
 All dependencies are managed through the container to ensure reproducibility. The environment setup is handled automatically when you launch the container.
 
 ## Using the Docker Container
 
-Our project leverages Docker to create a reproducible computational environment. This approach simplifies dependency management and makes it easier to run our analysis across different machines. The `docker-compose.yml` file in our repository defines the necessary settings to build and start the containerized environment, ready to use with all required dependencies installed.
+Our project leverages Docker to create a reproducible computational environment. This approach simplifies dependency management and makes it easier to run our analysis across different machines. The `docker-compose.yml` file in our repository defines the necessary settings to build and start the containerized environment, ready to use with all required dependencies installed. Our container image can be found on DockerHub at [riddhibattu/dsci310-group9_ny-airbnb-analysis](https://hub.docker.com/r/riddhibattu/dsci310-group9_ny-airbnb-analysis).
 
 To stop the container, press `CTRL+C` in the terminal where you ran `docker-compose`. To remove the container, use `docker-compose rm`.
 
