@@ -23,6 +23,7 @@ dependencies:
   - scipy
   - python-sounddevice
   - xgboost
+  - os
   - altair
   - plotly
   - folium

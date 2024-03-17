@@ -1,0 +1,11 @@
+Variable_1,Variable_2,Correlation
+reviews_per_month,number_of_reviews_ltm,0.8669978022083091
+reviews_per_month,number_of_reviews,0.6744171243152524
+number_of_reviews,number_of_reviews_ltm,0.6462901145243902
+availability_365,calculated_host_listings_count,0.1404944282283091
+calculated_host_listings_count,reviews_per_month,-0.13071571714532262
+number_of_reviews,calculated_host_listings_count,-0.12877821076710452
+longitude,price,-0.11752787491219592
+calculated_host_listings_count,number_of_reviews_ltm,-0.10631823433527018
+reviews_per_month,longitude,0.09876931142690232
+reviews_per_month,minimum_nights,-0.0941551807666422
