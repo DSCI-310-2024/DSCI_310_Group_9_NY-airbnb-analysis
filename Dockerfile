@@ -1,7 +1,25 @@
 # Start from the Jupyter scipy-notebook as a base
 FROM quay.io/jupyter/scipy-notebook:2024-02-24
 
-# Install dependencies from your environment.yml
+# Switch to root to install system dependencies
+USER root
+
+# Install system dependencies required for Quarto and other operations
+RUN apt-get update && apt-get install -y \
+    make \
+    gdebi-core \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Quarto
+ARG QUARTO_VERSION="1.4.537"
+RUN curl -o quarto-linux-arm64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-arm64.deb && \
+    gdebi --non-interactive quarto-linux-arm64.deb && \
+    rm quarto-linux-arm64.deb
+
+# Switch back to the jovyan user to perform operations that don't require root
+USER ${NB_UID}
+
+# Copy the environment.yml into the container to update the base environment
 COPY environment.yml /tmp/environment.yml
 RUN conda env update --name base --file /tmp/environment.yml && \
     conda clean --all -f -y
@@ -23,5 +41,6 @@ COPY . /home/jovyan/work
 # Expose the port Jupyter Notebook runs on
 EXPOSE 8888
 
-# Start Jupyter Notebook
+# Start Jupyter Notebook with no token or password for simplicity
+# Note: Consider the security implications of this approach for your use case
 CMD ["start-notebook.sh", "--NotebookApp.token=''", "--NotebookApp.password=''"]
