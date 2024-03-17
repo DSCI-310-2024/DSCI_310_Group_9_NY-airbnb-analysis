@@ -14,7 +14,6 @@ execute:
     echo: false
     warning: false
 editor: source
-#jupyter: dsci
 ---
 
 ```{python}

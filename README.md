@@ -25,7 +25,7 @@ To execute our data analysis in a containerized environment, follow these steps:
    ```
    docker-compose up --build
    ```
-4. **Access JupyterLab**: Once the container is running, open a web browser and navigate to `http://localhost:8888` to access JupyterLab. Use the token provided in the terminal output to log in.
+4. **Access JupyterLab**: Once the container is running, open a web browser and navigate to `http://localhost:8888` to access JupyterLab. Use the token if provided in the terminal output to log in.
 
 ## Dependencies
 
