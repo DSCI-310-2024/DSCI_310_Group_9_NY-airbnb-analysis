@@ -19,7 +19,7 @@ all: data/airbnb_data_2023.csv \
 data/airbnb_data_2023.csv: src/01_fetch_data_and_export.py
 	python src/01_fetch_data_and_export.py \
 	--input_file="http://data.insideairbnb.com/united-states/ny/new-york-city/2023-12-04/visualisations/listings.csv"\
-	--out_dir="data/airbnb_data_2023.csv"
+	--out_dir="data/raw/airbnb_data_2023.csv"
 
 # data preprocesssing makefile build
 data: data/cleaned/X_train.csv \
