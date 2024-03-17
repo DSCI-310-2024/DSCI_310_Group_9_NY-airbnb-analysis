@@ -13,7 +13,9 @@ all: data/airbnb_data_2023.csv \
      results/tables/correlations_ranked.csv \
      results/tables/dummy_classification_report.csv \
      results/tables/knn_classification_report.csv \
-     results/tables/hyperparam_classification_report.csv
+     results/tables/hyperparam_classification_report.csv \
+	 reports/milestone_2.html \
+	 reports/milestone_2.pdf
 
 # download data makefile build
 data/airbnb_data_2023.csv: src/01_fetch_data_and_export.py
@@ -39,11 +41,11 @@ results/tables/dummy_classification_report.csv results/tables/knn_classification
 	python src/04_model.py \
 
 # render to html
-reports/milestone_2.html: results/milestone_2.qmd
+reports/milestone_2.html: reports/milestone_2.qmd
 	quarto render reports/milestone_2.qmd --to html
 
 # render to pdf
-reports/milestone_2.pdf: results/milestone_2.qmd
+reports/milestone_2.pdf: reports/milestone_2.qmd
 	quarto render reports/milestone_2.qmd --to pdf
 
 #remove all targeted files using 'make clean'
