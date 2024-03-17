@@ -11,7 +11,7 @@ At the heart of our exploration lies the vibrant, dynamic world of New York City
 
 ## How to Run This Analysis
 
-To execute our data analysis, follow these steps:
+To execute our data analysis in a containerized environment, follow these steps:
 
 1. **Clone the Repository**: Clone this repository to your local machine to get started.
    ```
@@ -19,31 +19,35 @@ To execute our data analysis, follow these steps:
    ```
 2. **Navigate to Project Directory**: Change your directory to the project folder.
    ```
-   cd <project-directory>
+   cd DSCI_310_Group_9_NY-airbnb-analysis
    ```
-3. **Create and Activate the Conda Environment**: Use the `environment.yml` file to create a Conda environment that includes all necessary dependencies.
+3. **Launch the Analysis Environment**: Use Docker Compose to build and run the containerized environment.
    ```
-   conda env create -f environment.yml
-   conda activate environment
+   docker-compose up --build
    ```
-4. **Run the Analysis**: Open JupyterLab and run the notebook `milestone_1.ipynb` under the src folder.
+4. **Access JupyterLab**: Once the container is running, open a web browser and navigate to `http://localhost:8888` to access JupyterLab. Use the token provided in the terminal output to log in.
 
 ## Dependencies
 
-This project relies on several dependencies and Python libraries for data manipulation, analysis, and visualization:
+This project relies on several dependencies within the Docker container for data manipulation, analysis, and visualization:
 - JupyterLab
-
 - `pandas`
 - `numpy`
 - `seaborn`
 - `matplotlib`
-- `sklearn`
+- `scikit-learn`
 - `plotly`
 - `folium`
-- `xgboost`
 - `requests`
-- `branca`
 - `scipy`
+
+All dependencies are managed through a Conda environment to ensure reproducibility. The environment setup is handled automatically when you launch the container.
+
+## Using the Docker Container
+
+Our project leverages Docker to create a reproducible computational environment. This approach simplifies dependency management and makes it easier to run our analysis across different machines. The `docker-compose.yml` file in our repository defines the necessary settings to build and start the containerized environment, ensuring JupyterLab is ready to use with all required dependencies installed.
+
+To stop the container, press `CTRL+C` in the terminal where you ran `docker-compose up`. To remove the container, use `docker-compose down`.
 
 ## Licenses
 
@@ -57,4 +61,4 @@ This project utilizes New York City Airbnb Open Data from [insideairbnb.com](htt
 
 ## Inspiration for Analysis
 
-Our analysis is driven by the quest to decode the complexities of the Airbnb ecosystem in NYC, particularly since the Airbnb ban implemented in late 2023. We aim to answer pressing questions such as the variance in host activity across different areas, the impact of location and amenities on pricing strategies, and the trends in guest preferences. Through predictive modeling, we aspire to forecast future patterns in listings and pricing, offering valuable insights for hosts, guests, and policymakers alike.
+Our analysis is driven by the quest to decode the complexities of the Airbnb ecosystem in NYC, particularly since the Airbnb ban implemented in late 2023. We aim to answer pressing questions such as the variance in host activity across different areas, the impact of location and amenities on pricing strategies, and the trends in guest preferences. Through predictive modeling, we aspire to forecast future patterns in listings and pricing, offering valuable insights for hosts, guests, and policymakers alike. 
