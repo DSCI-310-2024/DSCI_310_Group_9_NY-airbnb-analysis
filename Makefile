@@ -18,8 +18,8 @@ all: data/airbnb_data_2023.csv \
 	 reports/milestone_2.pdf
 
 # download data makefile build
-data/airbnb_data_2023.csv: src/01_fetch_data_and_export.py
-	python src/01_fetch_data_and_export.py \
+data/airbnb_data_2023.csv: src/fetch_data_and_export.py
+	python src/fetch_data_and_export.py \
 
 # data preprocesssing makefile build
 data: data/cleaned/X_train.csv \
@@ -29,8 +29,8 @@ data: data/cleaned/X_train.csv \
       data/cleaned/test_df.csv \
       data/cleaned/train_df.csv
 
-data/cleaned/X_train.csv data/cleaned/X_test.csv data/cleaned/y_train.csv data/cleaned/y_test.csv data/cleaned/test_df.csv data/cleaned/train_df.csv: data/airbnb_data_2023.csv src/02_data_preprocessing.py
-	python src/02_data_preprocessing.py \
+data/cleaned/X_train.csv data/cleaned/X_test.csv data/cleaned/y_train.csv data/cleaned/y_test.csv data/cleaned/test_df.csv data/cleaned/train_df.csv: data/airbnb_data_2023.csv src/data_preprocessing.py
+	python src/data_preprocessing.py \
 
 # visualization makefile build
 results/figures/corr_heat_map.jpg results/figures/listing_locations.jpg results/figures/price_vs_reviews.jpg results/figures/price_vs_reviews_per_month.jpg results/figures/neighbourhood_groups_boxplots.jpg results/figures/room_type_boxplots.jpg results/figures/price_histogram.jpg results/tables/correlations_ranked.csv: data/cleaned/train_df.csv src/03_visualizations.py
