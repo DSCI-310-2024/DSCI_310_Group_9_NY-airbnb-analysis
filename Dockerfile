@@ -22,4 +22,7 @@ RUN conda install -y \
     click=8.1.7 \
     make=4.3 \
     jupyter \
-    quarto=1.4.550
+    quarto=1.4.550 \
+    iniconfig=2.0.0 \
+    pluggy=1.4.0 \
+    pytest=8.1.1
