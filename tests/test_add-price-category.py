@@ -3,7 +3,7 @@ import pytest
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from src.function_add_price_category import add_price_category  # Adjust the import based on your project structure
+from src.function_add_price_category import add_price_category
 
 def test_add_price_category_spanning_all_ranges():
     data = pd.DataFrame({'price': [-10, 25, 75, 125, 175, 225, 275, 325, 375]})
