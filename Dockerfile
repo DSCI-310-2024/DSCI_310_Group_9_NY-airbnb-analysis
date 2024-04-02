@@ -16,10 +16,12 @@ RUN conda install -y \
     scipy=1.12.0 \
     seaborn=0.13.2 \
     tabulate=0.9.0 \
-    pytest=8.1.1 \
     vl-convert-python=1.3.0 \
     tabulate=0.9.0 \
     click=8.1.7 \
     make=4.3 \
-    jupyter \
-    quarto=1.4.550
+    jupyter=1.0.0 \
+    quarto=1.4.550 \
+    iniconfig=2.0.0 \
+    pluggy=1.4.0 \
+    pytest=8.1.1
