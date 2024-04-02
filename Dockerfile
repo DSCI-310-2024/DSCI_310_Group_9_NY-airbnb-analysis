@@ -20,7 +20,7 @@ RUN conda install -y \
     tabulate=0.9.0 \
     click=8.1.7 \
     make=4.3 \
-    jupyter \
+    jupyter=1.0.0 \
     quarto=1.4.550 \
     iniconfig=2.0.0 \
     pluggy=1.4.0 \
