@@ -16,7 +16,6 @@ RUN conda install -y \
     scipy=1.12.0 \
     seaborn=0.13.2 \
     tabulate=0.9.0 \
-    pytest=8.1.1 \
     vl-convert-python=1.3.0 \
     tabulate=0.9.0 \
     click=8.1.7 \

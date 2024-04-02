@@ -11,7 +11,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.function_sns_plotting import sns_plotting  # Adjust the import based on your project structure
 
 # Same Data to be used for all tests
-data = pd.read_csv("data/cleaned/train_df.csv")
+data = pd.DataFrame({"price": [25, 75, 125, 175, 225, 275, 325, 375],
+                     "number_of_reviews": [2, 0, 1, 15, 22, 7, 5, 3],
+                     "reviews_per_month": [0, 3, 4, 1, 2, 0, 3, 4],
+                     "room_type": ["cat2", "cat1", "cat5", "cat4", "cat3", "cat6", "cat8", "cat7"]})
 
 # Check to see if output type is correct given correct inputs
 def test_sns_plotting_output_type():
