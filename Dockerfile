@@ -25,3 +25,6 @@ RUN conda install -y \
     iniconfig=2.0.0 \
     pluggy=1.4.0 \
     pytest=8.1.1
+
+RUN apt-get install fonts-lmodern -y
+RUN apt-get install lmodern -y
