@@ -30,3 +30,8 @@ RUN conda install -y \
 
 RUN apt-get update
 RUN apt-get install lmodern -y
+# RUN tlmgr update --self
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    lmodern \
+    && rm -rf /var/lib/apt/lists/*
