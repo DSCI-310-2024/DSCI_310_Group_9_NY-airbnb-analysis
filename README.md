@@ -23,7 +23,7 @@ To execute our data analysis in a containerized environment, follow these steps:
    ```
    cd DSCI_310_Group_9_NY-airbnb-analysis
    ```
-3. Ensure your Docker enginw is running.
+3. Ensure your Docker engine is running.
 
 4.  **Launch the Analysis Container**: Use Docker Compose to build and run the containerized environment. First clear all previous analysis using `make clean`.
    ```
@@ -36,7 +36,7 @@ To execute our data analysis in a containerized environment, follow these steps:
 
 The rendered pdf and html reports can be found under `reports/milestone_3.pdf` and `reports/milestone_3.html`.
 
-# How to Run Tests
+## How to Run Tests
 
 To execute our test suite, follow the steps:
 
