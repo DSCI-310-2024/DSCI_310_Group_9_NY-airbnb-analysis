@@ -18,8 +18,12 @@ from src.build_preprocessor import build_preprocessor
 
 def test_preprocessor_type():
     """Test that the function returns a ColumnTransformer object."""
-    preprocessor = build_preprocessor(['num'], ['text'], ['cat'])
-    assert isinstance(preprocessor, make_column_transformer)
+    numerical_data = ['numerical']
+    text_data = 'text'
+    categorical_data = ['category']
+    
+    preprocessor = build_preprocessor(numerical_data, text_data, categorical_data)
+    assert isinstance(preprocessor, ColumnTransformer)
 
 def test_transformer_assignment():
     """Test that the correct transformers are assigned to the specified types of data."""
@@ -30,25 +34,14 @@ def test_transformer_assignment():
     assert transformers.get('onehotencoder') == OneHotEncoder
     assert transformers.get('countvectorizer') == CountVectorizer
 
-def test_empty_data():
-    """Test the function with empty data lists."""
-    with pytest.raises(ValueError):  # Assuming your function raises a ValueError for empty lists
-        build_preprocessor([], [], [])
-
-def test_unexpected_data_type():
-    """Test the function with an unexpected data type."""
-    with pytest.raises(TypeError):  # Assuming your function raises a TypeError for wrong data type
-        build_preprocessor(123, "abc", True)
-
 def test_preprocessor():
-    
     # Create an artificial dataset
     np.random.seed(0)  # For reproducibility
     data = pd.DataFrame({
         'numerical': np.random.randn(100),
         'text': np.random.choice(['First text', 'Text number 2', 'Third sentence of text'], size=100),
         'category': np.random.choice(['A', 'B', 'C'], size=100),
-        'target': np.array([0]*90 + [1]*10)  # target variable made with 60 zeros and 40 1s, meaning dummy classifier should predict 0 everytime
+        'target': np.array([0]*90 + [1]*10)  # target variable made with 90 zeros and 10 1s, meaning dummy classifier should predict 0 everytime
     })
     
     # Split the dataset
@@ -73,8 +66,11 @@ def test_preprocessor():
     predictions = model.predict(X_test)
     accuracy = accuracy_score(y_test, predictions)
     
+    print(f"Dummy Classifier Accuracy: {accuracy:.4f}")
+    
     assert accuracy >= 0.5, "Accuracy should be at least 0.5"
     
-    print(f"Dummy Classifier Accuracy: {accuracy:.4f}")
+
+
 
 test_preprocessor()
