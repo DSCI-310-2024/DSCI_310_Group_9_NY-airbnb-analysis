@@ -15,7 +15,7 @@ from scipy.stats import randint
 
 def build_preprocessor(numerical_data, text_data, categorical_data):
     """_summary_
-    Builds a preprocessor for numerical, text, and categorical data 
+    Builds a preprocessor for numerical, text, and categorical data with the following transformations: Standard scaler, One hot encoding, and count Vectorizer
     Args:
         numerical_data (_type_): numeric data
         text_data (_type_): text data 

@@ -37,8 +37,8 @@ results/figures/corr_heat_map.jpg results/figures/listing_locations.jpg results/
 	python src/visualizations.py \
 
 # model makefile build
-results/tables/dummy_classification_report.csv results/tables/knn_classification_report.csv results/tables/hyperparam_classification_report.csv: src/04_model.py data/cleaned/X_train.csv data/cleaned/X_test.csv data/cleaned/y_train.csv data/cleaned/y_test.csv
-	python src/04_model.py \
+results/tables/dummy_classification_report.csv results/tables/knn_classification_report.csv results/tables/hyperparam_classification_report.csv: src/model.py data/cleaned/X_train.csv data/cleaned/X_test.csv data/cleaned/y_train.csv data/cleaned/y_test.csv
+	python src/model.py \
 
 # render to html
 reports/milestone_2.html: reports/milestone_2.qmd

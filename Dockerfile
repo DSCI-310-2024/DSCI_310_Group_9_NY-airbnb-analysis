@@ -1,6 +1,8 @@
 # Start from the Jupyter scipy-notebook as a base
 FROM quay.io/jupyter/scipy-notebook:2024-02-24
 
+USER root
+
 # Install  dependencies 
 RUN conda install -y \
     python=3.11 \
@@ -25,3 +27,11 @@ RUN conda install -y \
     iniconfig=2.0.0 \
     pluggy=1.4.0 \
     pytest=8.1.1
+
+RUN apt-get update
+RUN apt-get install lmodern -y
+# RUN tlmgr update --self
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    lmodern \
+    && rm -rf /var/lib/apt/lists/*
