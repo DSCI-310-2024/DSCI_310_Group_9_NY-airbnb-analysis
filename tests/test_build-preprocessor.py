@@ -12,7 +12,7 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from src.build_preprocessor import build_preprocessor
+from src.function_build_preprocessor import build_preprocessor
 
 
 def test_preprocessor_type():

@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock
 import pytest
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from src import data_preprocessing
+from scripts import data_preprocessing
 
 @pytest.fixture
 def mock_data():
@@ -24,7 +24,7 @@ def test_create_dir_if_not_exists(tmp_path):
     data_preprocessing.create_dir_if_not_exists(str(dir_path))
     assert dir_path.exists()
 
-@patch('src.data_preprocessing.pd.read_csv')
+@patch('scripts.data_preprocessing.pd.read_csv')
 def test_read_data(mock_read_csv, mock_data):
     mock_read_csv.return_value = mock_data
     data = data_preprocessing.read_data("dummy_path.csv")
@@ -56,7 +56,7 @@ def test_add_price_category():
     # Assert the correctness of the result
     pd.testing.assert_frame_equal(result_df, expected_df)
 
-@patch('src.data_preprocessing.pd.DataFrame.to_csv')
+@patch('scripts.data_preprocessing.pd.DataFrame.to_csv')
 def test_save_dataframes(mock_to_csv, tmp_path, mock_data):
     train_df, test_df = mock_data, mock_data  # Simplification for testing
     data_preprocessing.save_dataframes(str(tmp_path), train_df, test_df)
@@ -79,7 +79,7 @@ def test_main_functionality(tmp_path, mock_data):
             assert os.path.exists(os.path.join(output_dir, file_name))
 
         
-@patch('src.data_preprocessing.pd.read_csv')
+@patch('scripts.data_preprocessing.pd.read_csv')
 def test_invalid_data_formats(mock_read_csv, tmp_path):
     mock_read_csv.return_value = pd.DataFrame({
         'id': ['one', 'two'],

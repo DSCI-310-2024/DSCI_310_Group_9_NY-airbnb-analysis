@@ -5,7 +5,7 @@ import pytest
 from click.testing import CliRunner
 from unittest.mock import patch
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from src.fetch_data_and_export import create_dir_if_not_exists, main
+from scripts.fetch_data_and_export import create_dir_if_not_exists, main
 
 # Test the create_dir_if_not_exists function
 def test_create_dir_if_not_exists(tmp_path):

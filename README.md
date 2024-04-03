@@ -23,16 +23,37 @@ To execute our data analysis in a containerized environment, follow these steps:
    ```
    cd DSCI_310_Group_9_NY-airbnb-analysis
    ```
-3. **Launch the Analysis Environment**: Use Docker Compose to build and run the containerized environment. First clear all previous analysis using `make clean`.
+3. Ensure your Docker enginw is running.
+
+4.  **Launch the Analysis Container**: Use Docker Compose to build and run the containerized environment. First clear all previous analysis using `make clean`.
    ```
    docker-compose run --rm analysis-env make clean
    ```
-4. Then run the analysis using `make all`.
+5. Then run the analysis using `make all`.
    ```
    docker-compose run --rm analysis-env make all
    ```
 
-The rendered pdf and html reports can be found under `reports/milestone_2.pdf` and `reports/milestone_2.html`.
+The rendered pdf and html reports can be found under `reports/milestone_3.pdf` and `reports/milestone_3.html`.
+
+# How to Run Tests
+
+To execute our test suite, follow the steps:
+
+1. Launch a terminal and install the environment for this project if you don't have it already using:
+   ```
+   conda env create -f environment.yml
+   ```
+2. Activate the environment using:
+   ```
+   conda activate group9_airbnb_environment
+   ```
+3. Run the test suite using:
+   ```
+   pytest tests/*
+   ```
+
+This will allow you ensure all functions are working as intended.
 
 ## Dependencies
 
@@ -46,6 +67,8 @@ This project relies on several dependencies within the Docker container for data
 - `matplotlib`
 - `scikit-learn`
 - `scipy`
+- `quarto`
+- `pytest`
 
 All dependencies are managed through the container to ensure reproducibility. The environment setup is handled automatically when you launch the container.
 

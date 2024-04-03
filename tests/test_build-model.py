@@ -15,22 +15,14 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-# sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from src.build_model import build_clf_model
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from src.function_build_model import build_clf_model
+
+X, y = make_classification(n_samples=100, n_features=4, n_informative=2, n_redundant=0, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
-
-
-@pytest.fixture
-def data():
-
-    X, y = make_classification(n_samples=100, n_features=4, n_informative=2, n_redundant=0, random_state=42)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    return X_train, X_test, y_train, y_test
-
-
-def test_build_clf_model(data):
-    X_train, X_test, y_train, y_test = data
+def test_build_clf_model():
     preprocessor = StandardScaler()
     model = KNeighborsClassifier()
     tbl_out_dir = "./test_outputs"
@@ -48,3 +40,4 @@ def test_build_clf_model(data):
     
 
     os.remove(os.path.join(tbl_out_dir, clf_report_file_name))
+    os.rmdir(tbl_out_dir)
