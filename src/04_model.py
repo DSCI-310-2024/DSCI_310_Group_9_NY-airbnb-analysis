@@ -21,7 +21,7 @@ warnings.filterwarnings("ignore")
 # Function to create the directory if it doesn't exist
 def create_dir_if_not_exists(directory):
     if not os.path.exists(directory):
-        os.makedirs(directory)
+        os.makedirs(directory, exist_ok=True)
 
 # parse/define command line arguments here
 
@@ -115,7 +115,7 @@ def main(input_dir, tbl_out_dir):
 
     try:
         rand_search = RandomizedSearchCV(knn_model, param_distributions=param_dist, n_iter=5,  
-                                        n_jobs=-1,  
+                                        n_jobs=1,  
                                         scoring='accuracy', cv=3, 
                                         verbose=1, random_state=42, pre_dispatch='2*n_jobs')  
     except Exception as e:
