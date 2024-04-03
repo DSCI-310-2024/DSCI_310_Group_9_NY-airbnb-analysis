@@ -383,16 +383,16 @@ Correlation
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-reviews\_per\_month & number\_of\_reviews\_ltm & 0.857524 \\
-reviews\_per\_month & number\_of\_reviews & 0.673009 \\
-number\_of\_reviews & number\_of\_reviews\_ltm & 0.645033 \\
-host\_id & id & 0.468438 \\
-availability\_365 & id & 0.340685 \\
-availability\_365 & host\_id & 0.267412 \\
-id & number\_of\_reviews & -0.224218 \\
-id & calculated\_host\_listings\_count & 0.174442 \\
-reviews\_per\_month & host\_id & 0.143336 \\
-calculated\_host\_listings\_count & availability\_365 & 0.140427 \\
+reviews\_per\_month & number\_of\_reviews\_ltm & 0.864186 \\
+reviews\_per\_month & number\_of\_reviews & 0.68403 \\
+number\_of\_reviews & number\_of\_reviews\_ltm & 0.649095 \\
+id & host\_id & 0.467509 \\
+id & availability\_365 & 0.339904 \\
+availability\_365 & host\_id & 0.269954 \\
+id & number\_of\_reviews & -0.220865 \\
+calculated\_host\_listings\_count & id & 0.170879 \\
+host\_id & reviews\_per\_month & 0.139133 \\
+availability\_365 & calculated\_host\_listings\_count & 0.136801 \\
 
 \end{longtable}
 
@@ -545,17 +545,17 @@ Criterion & precision & recall & f1-score & support \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-0-50 & 0 & 0 & 0 & 986 \\
-50-100 & 0.273278 & 1 & 0.429251 & 2166 \\
-100-150 & 0 & 0 & 0 & 1556 \\
-150-200 & 0 & 0 & 0 & 1134 \\
-200-250 & 0 & 0 & 0 & 593 \\
-250-300 & 0 & 0 & 0 & 401 \\
-300-350 & 0 & 0 & 0 & 240 \\
-350+ & 0 & 0 & 0 & 850 \\
-accuracy & 0.273278 & 0.273278 & 0.273278 & 0.273278 \\
-macro avg & 0.0341597 & 0.125 & 0.0536564 & 7926 \\
-weighted avg & 0.0746808 & 0.273278 & 0.117305 & 7926 \\
+0-50 & 0 & 0 & 0 & 1061 \\
+50-100 & 0.266843 & 1 & 0.421273 & 2115 \\
+100-150 & 0 & 0 & 0 & 1640 \\
+150-200 & 0 & 0 & 0 & 1077 \\
+200-250 & 0 & 0 & 0 & 576 \\
+250-300 & 0 & 0 & 0 & 397 \\
+300-350 & 0 & 0 & 0 & 224 \\
+350+ & 0 & 0 & 0 & 836 \\
+accuracy & 0.266843 & 0.266843 & 0.266843 & 0.266843 \\
+macro avg & 0.0333554 & 0.125 & 0.0526591 & 7926 \\
+weighted avg & 0.0712053 & 0.266843 & 0.112414 & 7926 \\
 
 \end{longtable}
 
@@ -578,22 +578,22 @@ Criterion & precision & recall & f1-score & support \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-0-50 & 0.556159 & 0.622718 & 0.58756 & 986 \\
-50-100 & 0.510088 & 0.618652 & 0.559149 & 2166 \\
-100-150 & 0.366647 & 0.405527 & 0.385108 & 1556 \\
-150-200 & 0.313542 & 0.265432 & 0.287488 & 1134 \\
-200-250 & 0.257218 & 0.165261 & 0.201232 & 593 \\
-250-300 & 0.274131 & 0.177057 & 0.215152 & 401 \\
-300-350 & 0.163265 & 0.0666667 & 0.0946746 & 240 \\
-350+ & 0.658505 & 0.601176 & 0.628536 & 850 \\
-accuracy & 0.45193 & 0.45193 & 0.45193 & 0.45193 \\
-macro avg & 0.387444 & 0.365311 & 0.369862 & 7926 \\
-weighted avg & 0.434097 & 0.45193 & 0.438844 & 7926 \\
+0-50 & 0.599291 & 0.637135 & 0.617634 & 1061 \\
+50-100 & 0.508475 & 0.638298 & 0.566038 & 2115 \\
+100-150 & 0.400713 & 0.410976 & 0.40578 & 1640 \\
+150-200 & 0.317719 & 0.289694 & 0.30306 & 1077 \\
+200-250 & 0.224 & 0.145833 & 0.176656 & 576 \\
+250-300 & 0.232 & 0.146096 & 0.179289 & 397 \\
+300-350 & 0.205357 & 0.102679 & 0.136905 & 224 \\
+350+ & 0.645553 & 0.572967 & 0.607098 & 836 \\
+accuracy & 0.461267 & 0.461267 & 0.461267 & 0.461267 \\
+macro avg & 0.391638 & 0.367959 & 0.374057 & 7926 \\
+weighted avg & 0.443784 & 0.461267 & 0.448585 & 7926 \\
 
 \end{longtable}
 
 We see in Table~\ref{tbl-knn-clf} here that the accuracy for the KNN
-model is 0.45, which is better than our dummy model, but we still want
+model is 0.46, which is better than our dummy model, but we still want
 to see if we can do better with another choice of neighbours. Upon
 hyperparameter optimization, we found that 15 neighbours proved to be
 the optimal choice.
@@ -614,22 +614,22 @@ Criterion & precision & recall & f1-score & support \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-0-50 & 0.636667 & 0.581136 & 0.607635 & 986 \\
-50-100 & 0.544566 & 0.668513 & 0.600207 & 2166 \\
-100-150 & 0.368999 & 0.410026 & 0.388432 & 1556 \\
-150-200 & 0.306863 & 0.276014 & 0.290622 & 1134 \\
-200-250 & 0.274809 & 0.182125 & 0.219067 & 593 \\
-250-300 & 0.331776 & 0.177057 & 0.230894 & 401 \\
-300-350 & 0.28 & 0.0875 & 0.133333 & 240 \\
-350+ & 0.611111 & 0.672941 & 0.640538 & 850 \\
-accuracy & 0.472369 & 0.472369 & 0.472369 & 0.472369 \\
-macro avg & 0.419349 & 0.381914 & 0.388841 & 7926 \\
-weighted avg & 0.455725 & 0.472369 & 0.458251 & 7926 \\
+0-50 & 0.684211 & 0.600377 & 0.639558 & 1061 \\
+50-100 & 0.543624 & 0.689362 & 0.60788 & 2115 \\
+100-150 & 0.411232 & 0.415244 & 0.413228 & 1640 \\
+150-200 & 0.326087 & 0.320334 & 0.323185 & 1077 \\
+200-250 & 0.245902 & 0.15625 & 0.191083 & 576 \\
+250-300 & 0.315315 & 0.176322 & 0.226171 & 397 \\
+300-350 & 0.29703 & 0.133929 & 0.184615 & 224 \\
+350+ & 0.617582 & 0.672249 & 0.643757 & 836 \\
+accuracy & 0.488645 & 0.488645 & 0.488645 & 0.488645 \\
+macro avg & 0.430123 & 0.395508 & 0.403685 & 7926 \\
+weighted avg & 0.47325 & 0.488645 & 0.475573 & 7926 \\
 
 \end{longtable}
 
 From Table~\ref{tbl-hyperparam-clf} we see that this optimization
-processes improved the accuracy of our model from around 0.45 to 0.47.
+processes improved the accuracy of our model from around 0.46 to 0.49.
 
 \section{Discussion}\label{discussion}
 
@@ -637,7 +637,7 @@ Our investigation utilized an KNN machine learning algorithm to estimate
 pricing categories for Airbnb listings in New York City. The dataset was
 divided using an 80/20 train-test split, and we processed features as
 either numerical or categorical to forecast the prices within
-predetermined ranges. The model achieved an accuracy of about 0.47 as
+predetermined ranges. The model achieved an accuracy of about 0.49 as
 indicated in the classification report above, which is not the best
 however, considering the complexity of the pricing structure in the
 short-term rental market it performed decently.

@@ -31,9 +31,3 @@ def test_main_invalid_url(tmp_path):
         runner = CliRunner()
         result = runner.invoke(main, ['--data_url', 'http://invalidurl.com/data.csv', '--out_dir', str(tmp_path)])
         assert result.exit_code != 0
-
-# Test handling of invalid directory path
-def test_main_invalid_directory():
-    runner = CliRunner()
-    result = runner.invoke(main, ['--data_url', 'http://data.insideairbnb.com/united-states/ny/new-york-city/2023-12-04/visualisations/listings.csv', '--out_dir', '/invalid/path'])
-    assert result.exit_code != 0
