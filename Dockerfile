@@ -31,3 +31,4 @@ RUN conda install -y \
 RUN apt-get update
 RUN apt-get install fonts-lmodern -y
 RUN apt-get install lmodern -y
+RUN apt-get texlive-fontsrecommended -y
