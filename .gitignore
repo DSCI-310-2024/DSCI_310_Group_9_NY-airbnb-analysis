@@ -107,3 +107,8 @@ src/eda.
 # exlucde qurto yml
 _quarto.yml
 
+# Exclude .ipython
+.ipython/profile_default/startup
+
+# Exclude local share
+.local/share
