@@ -78,6 +78,24 @@ Our project leverages Docker to create a reproducible computational environment.
 
 To stop the container, press `CTRL+C` in the terminal where you ran `docker-compose`. To remove the container, use `docker-compose rm`.
 
+## Community Guidelines for "Predicting the Price of New York City Airbnbs"
+
+Welcome to our project! We encourage contributions, feedback, and questions. Here's how you can get involved:
+
+### Contributing to the Software
+- **Fork & PR:** Fork the project, make your changes, and submit a pull request.
+- **Code Review:** Wait for a review by project maintainers and address any comments.
+- **Acceptance:** Once approved, your contribution will be merged.
+
+### Reporting Issues
+- **Check First:** Look through existing issues to avoid duplicates.
+- **Submit Issue:** If new, submit an issue with detailed information about the problem.
+
+### Seeking Support
+- **Documentation:** Refer to README and project documentation first.
+- **Community Channels:** Use GitHub Discussions for questions.
+- **Direct Contact:** Reach out to project contributors via GitHub or provided contact details for specific inquiries.
+
 ## Licenses
 
 This project is licensed under the [MIT License](./LICENSE) and the data is licensed under the [Creative Commons Attribution 4.0 International License](./LICENSE).
