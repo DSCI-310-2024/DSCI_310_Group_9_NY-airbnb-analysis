@@ -1,6 +1,3 @@
-# author: Prithvi Surekha, Oliver Gullery 
-# date: 2024-03-12
-
 all: data/airbnb_data_2023.csv \
      data \
      results/figures/corr_heat_map.jpg \
