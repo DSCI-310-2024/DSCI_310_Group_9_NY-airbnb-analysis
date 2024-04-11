@@ -1,13 +1,3 @@
-# services:
-#   analysis-env:
-#       image: riddhibattu/dsci310-group9_ny-airbnb-analysis:latest
-#       ports:
-#         - "8888:8888"
-#       volumes:
-#         - .:/home/jovyan
-#       environment:
-#         PASSWORD: password
-
 services:
   analysis-env:
     image: riddhibattu/dsci310-group9_ny-airbnb-analysis:latest
