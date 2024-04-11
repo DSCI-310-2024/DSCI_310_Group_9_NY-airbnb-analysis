@@ -104,6 +104,9 @@ config.yml
 # Exclude eda files
 src/eda.
 
-# exlucde qurto yml
+# exclude qurto yml
 _quarto.yml
 
+# exclude README_files\libs
+
+README_files\libs
