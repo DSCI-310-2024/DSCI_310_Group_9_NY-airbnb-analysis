@@ -108,5 +108,10 @@ src/eda.
 _quarto.yml
 
 # exclude README_files\libs
-
 README_files\libs
+
+# Exclude .ipython
+.ipython/profile_default/startup
+
+# Exclude local share
+.local/share

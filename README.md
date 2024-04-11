@@ -23,7 +23,7 @@ To execute our data analysis in a containerized environment, follow these steps:
    ```
    cd DSCI_310_Group_9_NY-airbnb-analysis
    ```
-3. Ensure your Docker enginw is running.
+3. Ensure your Docker engine is running.
 
 4.  **Launch the Analysis Container**: Use Docker Compose to build and run the containerized environment. First clear all previous analysis using `make clean`.
    ```
@@ -36,7 +36,7 @@ To execute our data analysis in a containerized environment, follow these steps:
 
 The rendered pdf and html reports can be found under `reports/milestone_3.pdf` and `reports/milestone_3.html`.
 
-# How to Run Tests
+## How to Run Tests
 
 To execute our test suite, follow the steps:
 
@@ -77,6 +77,24 @@ All dependencies are managed through the container to ensure reproducibility. Th
 Our project leverages Docker to create a reproducible computational environment. This approach simplifies dependency management and makes it easier to run our analysis across different machines. The `docker-compose.yml` file in our repository defines the necessary settings to build and start the containerized environment, ready to use with all required dependencies installed. Our container image can be found on DockerHub at [riddhibattu/dsci310-group9_ny-airbnb-analysis](https://hub.docker.com/r/riddhibattu/dsci310-group9_ny-airbnb-analysis).
 
 To stop the container, press `CTRL+C` in the terminal where you ran `docker-compose`. To remove the container, use `docker-compose rm`.
+
+## Community Guidelines for "Predicting the Price of New York City Airbnbs"
+
+Welcome to our project! We encourage contributions, feedback, and questions. Here's how you can get involved:
+
+### Contributing to the Software
+- **Fork & PR:** Fork the project, make your changes, and submit a pull request.
+- **Code Review:** Wait for a review by project maintainers and address any comments.
+- **Acceptance:** Once approved, your contribution will be merged.
+
+### Reporting Issues
+- **Check First:** Look through existing issues to avoid duplicates.
+- **Submit Issue:** If new, submit an issue with detailed information about the problem.
+
+### Seeking Support
+- **Documentation:** Refer to README and project documentation first.
+- **Community Channels:** Use GitHub Discussions for questions.
+- **Direct Contact:** Reach out to project contributors via GitHub or provided contact details for specific inquiries.
 
 ## Licenses
 

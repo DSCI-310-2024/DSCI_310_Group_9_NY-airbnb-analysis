@@ -13,7 +13,7 @@ RUN conda install -y \
     nbconvert=7.16.2 \
     numpy=1.26.4 \
     pandas=2.2.1 \
-    pip>=23.2.1 \
+    pip=23.2.1 \
     scikit-learn=1.4.1.post1 \
     scipy=1.12.0 \
     seaborn=0.13.2 \
