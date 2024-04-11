@@ -52,13 +52,26 @@ def build_clf_model(model, preprocessor, tbl_out_dir, X_train, y_train, X_test, 
     return model 
 
     
-def knn_param_optimization(knn_model, tbl_out_dir, X_train, y_train, X_test, y_test,replacement_dict):
-    # KNN Hyperparameter Optimization
-    param_dist = {
-        'kneighborsclassifier__n_neighbors': randint(1, 30),
-        'kneighborsclassifier__weights': ['uniform', 'distance'],
-        'kneighborsclassifier__p': [1, 2]  
-    }
+def knn_param_optimization(knn_model, tbl_out_dir, X_train, y_train, X_test, y_test,replacement_dict, output_file_name, param_dist):
+    """_summary_
+    Performs Hyperparameter optimization for KNN model 
+    Args:
+        knn_model (_type_): KNN Model Built with Sklearn Library 
+        tbl_out_dir (_type_): Data Input
+        X_train (_type_): training data input features
+        y_train (_type_): training data target variable
+        X_test (_type_): testing data input features
+        y_test (_type_): testing data target variable
+        replacement_dict (_type_): Dictionary with proper Formatting for classification report 
+        output_file_name (str): The name to save the output as, will be a .csv file 
+        
+        
+    Output:
+        Saves output of model to csv file defined in output_file_name
+    """
+    
+    
+
 
     try:
         rand_search = RandomizedSearchCV(knn_model, param_distributions=param_dist, n_iter=5,  
@@ -75,11 +88,18 @@ def knn_param_optimization(knn_model, tbl_out_dir, X_train, y_train, X_test, y_t
     # Classification Report After Hyperparameter Optimization
     rand_search_predictions = rand_search.predict(X_test)
     hyperparam_clf_report = classification_report(y_test, rand_search_predictions, output_dict=True)
-    hyperparam_clf_report = dict((replacement_dict[key], value) for (key, value) in hyperparam_clf_report.items())
-    hyperparam_clf_report = pd.DataFrame(hyperparam_clf_report).transpose()
+    # hyperparam_clf_report = dict((replacement_dict[key], value) for (key, value) in hyperparam_clf_report.items())
+    # hyperparam_clf_report = pd.DataFrame(hyperparam_clf_report).transpose()
+    new_hyperparam_clf_report = {}
+    for key, value in hyperparam_clf_report.items():
+        new_key = replacement_dict.get(key, key) 
+        new_hyperparam_clf_report[new_key] = value
+
+
+    hyperparam_clf_report = pd.DataFrame(new_hyperparam_clf_report).transpose()
 
     # Saving table
-    hyperparam_clf_report.to_csv(os.path.join(tbl_out_dir, 'hyperparam_classification_report.csv'))
+    hyperparam_clf_report.to_csv(os.path.join(tbl_out_dir, output_file_name))
 
 
 # parse/define command line arguments here
@@ -140,11 +160,17 @@ def main(input_dir, tbl_out_dir):
     except Exception as e:
         print(f"Error creating KNN model: {e}")
 
+    # KNN Hyperparameter Optimization
+    param_dist = {
+        'kneighborsclassifier__n_neighbors': randint(1, 30),
+        'kneighborsclassifier__weights': ['uniform', 'distance'],
+        'kneighborsclassifier__p': [1, 2]  
+    }
 
     # performing hyperparameter optimization with our knn model and saving classification report results to csv
     try:
         knn_param_optimization(knn_model=knn_model, tbl_out_dir=tbl_out_dir, X_train=X_train, y_train=y_train_encoded, X_test=X_test, 
-                               y_test=y_test_encoded,replacement_dict=replacement_dict)
+                               y_test=y_test_encoded,replacement_dict=replacement_dict, output_file_name='hyperparam_classification_report.csv', param_dist=param_dist)
     except Exception as e: 
         print(f'Error performing hyperparameter optimization: {e}')
 
