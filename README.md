@@ -34,6 +34,34 @@ To execute our data analysis in a containerized environment, follow these steps:
    docker-compose run --rm analysis-env make all
    ```
 
+6. **Troubleshooting Installation Issues**:
+If Docker does not install our package, follow these steps:
+- Start the containers:
+  ```
+  docker-compose up
+  ```
+- Select the last URL provided in the terminal output.
+- Open a new terminal and install the required package:
+  ```
+  pip install pynyairbnb==0.4.0
+  ```
+- Run:
+  ```
+  make clean
+  ```
+- Then:
+  ```
+  make all
+  ```
+
+The rendered pdf and html reports can be found under `reports/milestone_3.pdf` and `reports/milestone_3.html`.
+
+## How to Run Tests
+
+To execute our test suite, follow the steps:
+
+1. Launch a terminal and install the environment for this project if you don't have it already using:
+
 The rendered pdf and html reports can be found under `reports/milestone_3.pdf` and `reports/milestone_3.html`.
 
 ## How to Run Tests
