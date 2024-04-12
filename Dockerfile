@@ -28,7 +28,7 @@ RUN conda install -y \
     pluggy=1.4.0 \
     pytest=8.1.1
 
-RUN pip install pynyairbnb==0.3.0
+RUN pip install pynyairbnb==0.4.0
 
 RUN apt-get update
 RUN apt-get install lmodern -y
