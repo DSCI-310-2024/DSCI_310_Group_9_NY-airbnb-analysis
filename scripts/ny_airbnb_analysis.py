@@ -1,5 +1,7 @@
 import click
 from pynyairbnb.pynyairbnb import nyairbnb_analysis
+import warnings
+warnings.filterwarnings("ignore")
 
 # parse/define command line arguments here
 
