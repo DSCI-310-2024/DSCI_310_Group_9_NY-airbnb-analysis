@@ -26,8 +26,9 @@ RUN conda install -y \
     quarto=1.4.550 \
     iniconfig=2.0.0 \
     pluggy=1.4.0 \
-    pytest=8.1.1 \
-    pynyairbnb=0.3.0
+    pytest=8.1.1
+
+RUN pip install pynyairbnb=0.3.0
 
 RUN apt-get update
 RUN apt-get install lmodern -y
