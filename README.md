@@ -25,22 +25,13 @@ To execute our data analysis in a containerized environment, follow these steps:
    ```
 3. Ensure your Docker engine is running.
 
-4.  **Launch the Analysis Container**: Use Docker Compose to build and run the containerized environment. First clear all previous analysis using `make clean`.
-   ```
-   docker-compose run --rm analysis-env make clean
-   ```
-5. Then run the analysis using `make all`.
-   ```
-   docker-compose run --rm analysis-env make all
-   ```
-
-6. **Troubleshooting Installation Issues**:
-If Docker does not install our package, follow these steps:
+4. **Launch the Analysis Container**:
+   
 - Start the containers:
   ```
   docker-compose up
   ```
-- Select the last URL provided in the terminal output.
+- Select the last URL provided in the terminal output (example): http://127.0.0.1:8888/lab?token=827bcf21f66eeda50a817889e3681448b1ce20616621fda3
 - Open a new terminal and install the required package:
   ```
   pip install pynyairbnb==0.4.0
@@ -49,7 +40,7 @@ If Docker does not install our package, follow these steps:
   ```
   make clean
   ```
-- Then:
+- Then create analysis:
   ```
   make all
   ```
